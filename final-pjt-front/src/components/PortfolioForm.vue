@@ -2,7 +2,7 @@
     <div>
         <form @submit.prevent="createPortfolio">
             <div class="mb-3">
-                <label for="termInput" class="form-label">목표를 언제까지 달성하고 싶으신가요? (단위: 년)</label>
+                <label for="termInput" class="form-label">1. 목표를 언제까지 달성하고 싶으신가요? (단위: 년)</label>
                 <input type="number" class="form-control" id="termInput" v-model="term">
                 <div id="termHelp" class="form-text">단기 (1년 이내), 중기 (1~5년), 장기 (5년 이상)</div>
             </div>
@@ -43,7 +43,7 @@
                     <option value="job-fulltime">정규직</option>
                     <option value="job-parttime">계약직/프리랜서</option>
                     <option value="job-invest">투자 소득</option>
-                    <option value="job-none">투자 소득</option>
+                    <option value="job-none">무직</option>
                 </select>
             </div>
             <div class="mb-3">
@@ -78,14 +78,290 @@ const createPortfolio = function () {
         alert('필수 입력 항목을 채워주세요.');
         return;
     }
-    console.log(term.value)
-    console.log(important.value)
-    console.log(emerMoney.value)
-    console.log(safeUtility.value)
-    console.log(goalMoney.value)
-    console.log(job.value)
-    console.log(family.value)
+    // console.log(SaveInvTypeFunc())
+    // console.log(PortInvType())
+    // console.log(PortSaveType())
+    
+    // console.log(term.value)
+    // console.log(important.value)
+    // console.log(emerMoney.value)
+    // console.log(safeUtility.value)
+    // console.log(goalMoney.value)
+    // console.log(job.value)
+    // console.log(family.value)
 }
+
+// 저축 vs 투자
+const SaveInvTypeFunc = function () {
+    let saving_score = 0; // 저축 상품 점수
+    let inv_score = 0   // 투자 상품 점수
+
+    //q1
+    if (term.value <= 1) {
+        saving_score += 80 * 0.4
+        inv_score += 20 * 0.4
+    } else if (term.value > 1 && term.value < 5) {
+        saving_score += 50 * 0.4
+        inv_score += 50 * 0.4
+    } else if (term.value >= 5) {
+        saving_score += 20 * 0.4
+        inv_score += 80 * 0.4
+    } 
+    //q2
+    if (important.value === 'loss_min') {
+        saving_score += 80 * 0.3
+        inv_score += 20 * 0.3
+    } else if (important.value === 'balance') {
+        saving_score += 50 * 0.3
+        inv_score += 50 * 0.3
+    } else if (important.value === 'risk') {
+        saving_score += 20 * 0.3
+        inv_score += 80 * 0.3
+    }
+    // q3
+    if (emerMoney.value === '119-zero') {
+        saving_score += 80 * 0.2
+        inv_score += 20 * 0.2
+    } else if (emerMoney.value === '119-few') {
+        saving_score += 50 * 0.2
+        inv_score += 50 * 0.2
+    } else if (emerMoney.value === '119-rich') {
+        saving_score += 20 * 0.2
+        inv_score += 80 * 0.2
+    }
+    // q4
+    if (safeUtility.value === 'SafeOrUtility-safe') {
+        saving_score += 80 * 0.1
+        inv_score += 20 * 0.1
+    } else if (safeUtility.value === 'SafeOrUtility-balance') {
+        saving_score += 50 * 0.1
+        inv_score += 50 * 0.1
+    } else if (safeUtility.value === 'SafeOrUtility-util') {
+        saving_score += 50 * 0.1
+        inv_score += 50 * 0.1
+    }
+    // q5
+    if (goalMoney.value <= 1000) {
+        saving_score += 5
+    } else if (goalMoney.value >= 5000) {
+        inv_score += 5
+    }
+    // q6
+    if (job.value === 'job-fulltime') {
+        inv_score += 3
+    } else if (job.value === 'job-parttime') {
+        saving_score += 3
+    } else if (job.value === 'job-invest') {
+        inv_score += 5
+    } else if (job.value === 'job-none') {
+        saving_score += 5
+    }
+    // q7
+    if (family.value === 'family-solo-dependent') {
+        saving_score += 5
+        inv_score -= 5
+    } else if (family.value === 'family-solo') {
+        saving_score += 3
+        inv_score -= 3
+    } else if (family.value === 'family-couple-dependent') {
+        saving_score += 3
+        inv_score += 3
+    } else if (family.value === 'family-couple') {
+        saving_score -= 5
+        inv_score += 5
+    }
+
+    const temp_saving_score = saving_score
+    saving_score = saving_score/(saving_score + inv_score)
+    inv_score = inv_score/(temp_saving_score + inv_score)
+
+        return{saving_score, inv_score}
+}
+
+
+// 투자 상품 내
+const PortInvType = function () {
+    let dom_stock_score = 0; // 국내 주식형
+    let int_stock_score = 0   // 해외 주식형
+    let bond_score = 0   // 채권형
+    let alt_invest_score = 0   // 대안투자
+    
+
+    //q1
+    if (term.value <= 1) {
+        dom_stock_score += 10 * 0.4
+        int_stock_score += 10 * 0.4
+        bond_score += 80 * 0.4
+    } else if (term.value > 1 && term.value < 5) {
+        dom_stock_score += 30 * 0.4
+        int_stock_score += 20 * 0.4
+        bond_score += 40 * 0.4
+        alt_invest_score += 10 * 0.4
+    } else if (term.value >= 5) {
+        dom_stock_score += 30 * 0.4
+        int_stock_score += 40 * 0.4
+        bond_score += 10 * 0.4
+        alt_invest_score += 20 * 0.4
+    } 
+    // q2
+    if (important.value === 'loss_min') {
+        dom_stock_score += 10 * 0.3
+        int_stock_score += 10 * 0.3
+        bond_score += 80 * 0.3
+    } else if (important.value === 'balance') {
+        dom_stock_score += 25 * 0.3
+        int_stock_score += 25 * 0.3
+        bond_score += 30 * 0.3
+        alt_invest_score += 20 * 0.3
+    } else if (important.value === 'risk') {
+        dom_stock_score += 30 * 0.3
+        int_stock_score += 40 * 0.3
+        bond_score += 10 * 0.3
+        alt_invest_score += 20 * 0.3
+    }
+    // q3
+    if (emerMoney.value === '119-zero') {
+        dom_stock_score += 10 * 0.3
+        int_stock_score += 10 * 0.3
+        bond_score += 80 * 0.3
+    } else if (emerMoney.value === '119-few') {
+        dom_stock_score += 30 * 0.3
+        int_stock_score += 20 * 0.3
+        bond_score += 40 * 0.3
+        alt_invest_score += 10 * 0.3
+    } else if (emerMoney.value === '119-rich') {
+        dom_stock_score += 30 * 0.3
+        int_stock_score += 40 * 0.3
+        bond_score += 10 * 0.3
+        alt_invest_score += 20 * 0.3
+    }
+    // q5
+    if (goalMoney.value <= 1000) {
+        bond_score += 5
+    } else if (goalMoney.value >= 5000) {
+        dom_stock_score += 3
+        alt_invest_score += 3
+    }
+    // q6
+    if (job.value === 'job-fulltime') {
+        int_stock_score += 3
+        alt_invest_score += 2
+    } else if (job.value === 'job-parttime') {
+        dom_stock_score += 3
+        bond_score += 2
+    } else if (job.value === 'job-invest') {
+        alt_invest_score += 5
+    } else if (job.value === 'job-none') {
+        bond_score += 5
+    }
+    // q7
+    if (family.value === 'family-solo-dependent') {
+        dom_stock_score += 3
+        bond_score += 5
+    } else if (family.value === 'family-solo') {
+        dom_stock_score += 2
+        int_stock_score += 2
+        bond_score += 3
+    } else if (family.value === 'family-couple-dependent') {
+        int_stock_score += 2
+        bond_score += 2
+        alt_invest_score += 3
+    } else if (family.value === 'family-couple') {
+        int_stock_score +=3
+        alt_invest_score += 5
+    }
+
+    const temp_dom_stock_score = dom_stock_score
+    const temp_int_stock_score = int_stock_score
+    const temp_bond_score = bond_score
+    const temp_alt_invest_score = alt_invest_score
+    dom_stock_score = temp_dom_stock_score/(temp_dom_stock_score + temp_int_stock_score + temp_bond_score + temp_alt_invest_score)
+    int_stock_score = temp_int_stock_score/(temp_dom_stock_score + temp_int_stock_score + temp_bond_score + temp_alt_invest_score)
+    bond_score = temp_bond_score/(temp_dom_stock_score + temp_int_stock_score + temp_bond_score + temp_alt_invest_score)
+    alt_invest_score = temp_alt_invest_score/(temp_dom_stock_score + temp_int_stock_score + temp_bond_score + temp_alt_invest_score)
+
+        return{dom_stock_score, int_stock_score, bond_score, alt_invest_score}
+}
+
+// 저축 상품 내
+const PortSaveType = function () {
+    let reg_save_score = 0   // 보통예금
+    let inst_save_score = 0; // 적금/정기예금
+
+    //q1
+    if (term.value <= 1) {
+        reg_save_score += 80 * 0.4
+        inst_save_score += 20 * 0.4
+    } else if (term.value > 1 && term.value < 5) {
+        reg_save_score += 50 * 0.4
+        inst_save_score += 50 * 0.4
+    } else if (term.value >= 5) {
+        reg_save_score += 20 * 0.4
+        inst_save_score += 80 * 0.4
+    } 
+    // q3
+    if (emerMoney.value === '119-zero') {
+        reg_save_score += 80 * 0.2
+        inst_save_score += 20 * 0.2
+    } else if (emerMoney.value === '119-few') {
+        reg_save_score += 50 * 0.2
+        inst_save_score += 50 * 0.2
+    } else if (emerMoney.value === '119-rich') {
+        reg_save_score += 20 * 0.2
+        inst_save_score += 80 * 0.2
+    }
+    // q4
+    if (safeUtility.value === 'SafeOrUtility-safe') {
+        reg_save_score += 20 * 0.3
+        inst_save_score += 80 * 0.3
+    } else if (safeUtility.value === 'SafeOrUtility-balance') {
+        reg_save_score += 50 * 0.3
+        inst_save_score += 50 * 0.3
+    } else if (safeUtility.value === 'SafeOrUtility-util') {
+        reg_save_score += 80 * 0.3
+        inst_save_score += 20 * 0.3
+    }
+    // q5
+    if (goalMoney.value <= 1000) {
+        reg_save_score += 5
+    } else if (goalMoney.value >= 5000) {
+        inst_save_score += 5
+    }
+    // q6
+    if (job.value === 'job-fulltime') {
+        reg_save_score += 40 * 0.1
+        inst_save_score += 60 * 0.1
+    } else if (job.value === 'job-parttime') {
+        reg_save_score += 60 * 0.1
+        inst_save_score += 40 * 0.1
+    } else if (job.value === 'job-invest') {
+        reg_save_score += 50 * 0.1
+        inst_save_score += 50 * 0.1
+    } else if (job.value === 'job-none') {
+        reg_save_score += 70 * 0.1
+        inst_save_score += 30 * 0.1
+    }
+    // q7
+    if (family.value === 'family-solo-dependent') {
+        reg_save_score -= 3
+        inst_save_score += 3
+    } else if (family.value === 'family-solo') {
+        reg_save_score -= 2
+        inst_save_score += 2
+    } else if (family.value === 'family-couple-dependent') {
+        inst_save_score += 2
+    } else if (family.value === 'family-couple') {
+        reg_save_score += 2
+        inst_save_score -= 2
+    }
+
+    const temp_reg_save_score = reg_save_score
+    reg_save_score = reg_save_score/(reg_save_score + inst_save_score)
+    inst_save_score = inst_save_score/(temp_reg_save_score + inst_save_score)
+
+        return{reg_save_score, inst_save_score}
+}
+
 </script>
 
 <style scoped>
