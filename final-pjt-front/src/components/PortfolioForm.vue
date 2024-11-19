@@ -4,7 +4,7 @@
             <div class="mb-3">
                 <label for="termInput" class="form-label">목표를 언제까지 달성하고 싶으신가요? (단위: 년)</label>
                 <input type="number" class="form-control" id="termInput" v-model="term">
-                <div id="termHelp" class="form-text">단기 (1년 이내), 중기 (1~5년), 장기 (5년 이상)</div>
+                <div id="termHelp" class="form-text">단기 (1년 이내), 중기 (1~5년), 장기 (5년 이상), 1년 이내는 1년으로 작성해주세요.</div>
             </div>
             <div class="mb-3">
                 <label for="important" class="form-label">투자할 때 더 중요하게 여기는 것은 무엇인가요?</label>
@@ -43,7 +43,7 @@
                     <option value="job-fulltime">정규직</option>
                     <option value="job-parttime">계약직/프리랜서</option>
                     <option value="job-invest">투자 소득</option>
-                    <option value="job-none">투자 소득</option>
+                    <option value="job-none">무직</option>
                 </select>
             </div>
             <div class="mb-3">
@@ -64,6 +64,11 @@
 <script setup>
 import { ref } from 'vue'
 import axios from 'axios'
+import { useFinStore } from '@/stores/counter';
+import { useRouter } from 'vue-router';
+
+const store = useFinStore()
+const router = useRouter()
 
 const term = ref(null)
 const important = ref('loss_min')
@@ -78,13 +83,156 @@ const createPortfolio = function () {
         alert('필수 입력 항목을 채워주세요.');
         return;
     }
-    console.log(term.value)
-    console.log(important.value)
-    console.log(emerMoney.value)
-    console.log(safeUtility.value)
-    console.log(goalMoney.value)
-    console.log(job.value)
-    console.log(family.value)
+    riskPort()
+    createAnswer()
+    
+}
+
+const createAnswer = function () {
+    const token = store.token // 실제 사용자 토큰 값으로 대체
+    const headers = {
+    'Authorization': `Token ${token}`,
+    };
+    axios({
+        method: 'post',
+        url: `${store.API_URL}/financial_products/save_answer/`,
+        data: {
+            q1_expected_goal_amount: goalMoney.value,
+            q2_goal_duration: term.value,
+            q3_income_source: job.value,
+            q4_emergency_fund_status: emerMoney.value,
+            q5_investment_priority: important.value,
+            q6_safety_or_liquidity: safeUtility.value,
+            q7_household_status: family.value,
+        },
+        headers: headers // 헤더 추가
+    }).then(() => {
+        console.log('db 저장 성공')
+        router.push({ name: 'home' })
+    }).catch(err => console.log(err))
+}
+
+const riskPort = function () {
+    let risk_low = 0      // 저위험
+    let risk_m_low = 0    // 중저위험
+    let risk_m = 0        // 중위험
+    let risk_m_high = 0   // 중고위험
+    let risk_high = 0     // 고위험
+    // 목표 기간 - 가중치 0.4
+    if (term.value <= 1) {
+        risk_low += 0.4*80
+        risk_m_low += 0.4*20
+    }
+    else if (1 < term.value < 5) {
+        risk_low += 0.4*50
+        risk_m_low += 0.4*30
+        risk_m += 0.4*20
+    }
+    else if (5 <= term.value) {
+        risk_low += 0.4*20
+        risk_m_low += 0.4*20
+        risk_m += 0.4*30
+        risk_m_high += 0.4*20
+        risk_high += 0.4*10
+    }
+    // 투자할 때 더 중요하게 여기는 것 - 가중치 0.3
+    if (important.value === 'loss_min') {
+        risk_low += 0.3*80
+        risk_m_low += 0.3*20
+    }
+    else if (important.value === 'balance') {
+        risk_low += 0.3*30
+        risk_m_low += 0.3*30
+        risk_m += 0.3*20
+        risk_m_high += 0.3*10
+        risk_high += 0.3*10
+    }
+    else if (important.value === 'risk') {
+        risk_m_low += 0.3*20
+        risk_m += 0.3*20
+        risk_m_high += 0.3*30
+        risk_high += 0.3*30
+    }
+    // 비상자금 여부 - 가중치 0.2
+    if (emerMoney.value === '119-zero') {
+        risk_low += 0.2*80
+        risk_m_low += 0.2*20
+    }
+    else if (emerMoney.value === '119-few') {
+        risk_low += 0.2*50
+        risk_m_low += 0.2*30
+        risk_m += 0.2*20
+    }
+    else if (emerMoney.value === '119-rich') {
+        risk_low += 0.2*30
+        risk_m_low += 0.2*20
+        risk_m += 0.2*20
+        risk_m_high += 0.2*20
+        risk_high += 0.2*10
+    }
+    // 안전성과 유동성 중 중요한 부분 - 가중치 0.1
+    if (safeUtility.value === 'SafeOrUtility-safe') {
+        risk_low += 0.1*80
+        risk_m_low += 0.1*20
+    }
+    else if (safeUtility.value === 'SafeOrUtility-util') {
+        risk_low += 0.1*40
+        risk_m_low += 0.1*30
+        risk_m += 0.1*20
+        risk_m_high += 0.1*10
+    }
+    else if (safeUtility.value === 'SafeOrUtility-balance') {
+        risk_low += 0.1*50
+        risk_m_low += 0.1*30
+        risk_m += 0.1*20
+    }
+    // 목표를 달성하기 위해 필요한 애상 금액
+    if (goalMoney.value <= 1000) {
+        risk_low += 5
+    }
+    else if (5000 <= goalMoney.value) {
+        risk_high += 5
+    }
+    // 현재 소득을 얻는 형태
+    if (job.value === 'job-fulltime') {
+        risk_m_high += 3
+        risk_high += 2
+    }
+    else if (job.value === 'job-parttime') {
+        risk_low += 3
+        risk_m_low += 2
+    }
+    else if (job.value === 'job-invest') {
+        risk_high += 5
+    }
+    else if (job.value === 'job-none') {
+        risk_low += 5
+    }
+    // 가계 상황 (피부양자 여부 등)
+    if (family.value === 'family-solo-dependent') {
+        risk_low += 3
+        risk_m_low += 2
+    }
+    else if (family.value === 'family-solo') {
+        risk_low += 2
+        risk_m_low += 1
+    }
+    else if (family.value === 'family-couple-dependent') {
+        risk_m_low += 3
+        risk_m += 2
+    }
+    else if (family.value === 'family-couple') {
+        risk_m += 3
+        risk_high += 2
+    }
+    console.log(risk_low)
+    const total = risk_low + risk_m_low + risk_m + risk_m_high + risk_high
+    let riskArray = [risk_low, risk_m_low, risk_m, risk_m_high, risk_high]
+    riskArray.forEach((risk, index) => {
+        riskArray[index] = (risk/total)*100
+    });
+    [risk_low, risk_m_low, risk_m, risk_m_high, risk_high] = riskArray
+    console.log([risk_low, risk_m_low, risk_m, risk_m_high, risk_high])
 }
 </script>
 

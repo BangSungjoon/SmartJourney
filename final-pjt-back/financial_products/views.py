@@ -4,9 +4,12 @@ from rest_framework.response import Response
 from django.conf import settings
 import requests
 from .models import DepositOptions, DepositProducts, SavingProducts, SavingOptions
-from .serializers import DepositOptionsSerializer, DepositProductsSerializer, ProductOptionSerializer, SavingProductsSerializer, SavingOptionsSerializer
+from .serializers import DepositOptionsSerializer, DepositProductsSerializer, ProductOptionSerializer, SavingProductsSerializer, SavingOptionsSerializer, SavingAnswerSerializer
 from rest_framework import status
 from django.db.models import Max
+from rest_framework.decorators import permission_classes
+from rest_framework.permissions import IsAuthenticated
+
 
 
 
@@ -184,3 +187,11 @@ def save_saving(request):
             serializer.save(product=product)
         
     return Response(response)
+
+@api_view(['post'])
+@permission_classes([IsAuthenticated])
+def save_answer(request):
+    serializer = SavingAnswerSerializer(data=request.data)
+    if serializer.is_valid(raise_exception=True):
+        serializer.save(user=request.user)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)

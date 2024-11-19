@@ -45,12 +45,12 @@ class Answers(models.Model):    # 답변 기록
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete = models.CASCADE)
     q1_expected_goal_amount = models.IntegerField() # 목표를 달성하기 위해 필요한 예상 금액
     q2_goal_duration = models.IntegerField()   # 목표를 언제까지 달성하고 싶으신가요?
-    q3_income_source = models.IntegerField()   # 현재 소득은 어떻게 얻고 있나요?
-    q4_emergency_fund_status = models.IntegerField()   # 예기치 않은 상황에 대비한 비상 자금이 마련되어 있나요?
-    q5_investment_priority = models.IntegerField() # 투자할 때 더 중요하게 여기는 것
-    q6_safety_or_liquidity = models.IntegerField() # 안전성과 유동성 중 중요한 부분
-    q7_household_status = models.IntegerField()    # 가계 상황
-    q8_average_monthly_income = models.IntegerField()  # 평균적인 월 수입
+    q3_income_source = models.CharField(max_length=100) # 현재 소득은 어떻게 얻고 있나요?
+    q4_emergency_fund_status = models.CharField(max_length=100)   # 예기치 않은 상황에 대비한 비상 자금이 마련되어 있나요?
+    q5_investment_priority = models.CharField(max_length=100) # 투자할 때 더 중요하게 여기는 것
+    q6_safety_or_liquidity = models.CharField(max_length=100) # 안전성과 유동성 중 중요한 부분
+    q7_household_status = models.CharField(max_length=100)    # 가계 상황
+    # q8_average_monthly_income = models.IntegerField()  # 평균적인 월 수입
 
 class PortRisk(models.Model):  # 위험도에 따른 분류
     answer = models.OneToOneField(Answers, on_delete=models.CASCADE, primary_key=True)
