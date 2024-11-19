@@ -85,7 +85,9 @@ const createPortfolio = function () {
     }
     riskPort()
     createAnswer()
-    
+    console.log(SaveInvTypeFunc())
+    console.log(PortInvType())
+    console.log(PortSaveType())
 }
 
 const createAnswer = function () {
