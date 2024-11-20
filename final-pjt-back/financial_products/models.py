@@ -3,14 +3,14 @@ from django.conf import settings
 
 # Create your models here.
 class DepositProducts(models.Model):
-    fin_prdt_cd = models.TextField(unique=True)
-    kor_co_nm = models.TextField()
-    fin_prdt_nm = models.TextField()
-    etc_note = models.TextField()
-    join_deny = models.IntegerField()
-    join_member = models.TextField()
-    join_way = models.TextField()
-    spcl_cnd = models.TextField()
+    fin_prdt_cd = models.TextField(unique=True) # 금융 상품 코드
+    kor_co_nm = models.TextField()  # 금융 회사 명
+    fin_prdt_nm = models.TextField()    # 금융 상품 명
+    etc_note = models.TextField()   # 기타 유의사항
+    join_deny = models.IntegerField()   # 가입 제한
+    join_member = models.TextField()    # 가입 대상
+    join_way = models.TextField()   # 가입 방법
+    spcl_cnd = models.TextField()   # 우대 조건
 
 class DepositOptions(models.Model):
     product = models.ForeignKey("financial_products.DepositProducts", on_delete=models.CASCADE)
