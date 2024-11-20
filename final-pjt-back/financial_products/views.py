@@ -9,7 +9,8 @@ from rest_framework import status
 from django.db.models import Max
 from rest_framework.decorators import permission_classes
 from rest_framework.permissions import IsAuthenticated
-from django.http import HttpResponse, JsonResponsefrom django.shortcuts import get_object_or_404
+from django.http import HttpResponse, JsonResponse
+from django.shortcuts import get_object_or_404
 
 
 
@@ -183,14 +184,27 @@ def save_saving(request):
 @api_view(['get'])
 def get_depositproducts(request):
     bank = request.GET['bank'].split()[0]
-    deposit_products = DepositProducts.objects.filter(kor_co_nm=bank).values()
+    deposit_products = DepositProducts.objects.filter(kor_co_nm=bank)
     if deposit_products:
-        response = {
-            "deposit_products":list(deposit_products)
-        }
-        return JsonResponse(response)
-    else:
-        print("#######################################없음")
+        serializer = ProductOptionSerializer(deposit_products, many=True)
+        # print(serializer.data)
+        return Response(serializer.data)
+    # deposit_products = DepositProducts.objects.filter(kor_co_nm=bank).values()
+    
+    # # 2. 추출된 DepositProducts의 'fin_prdt_cd'를 리스트로 추출
+    # fin_prdt_cds = [product['fin_prdt_cd'] for product in deposit_products]
+    # # 3. DepositOptions에서 DepositProducts의 'fin_prdt_cd'와 같은 데이터를 필터링
+    # deposit_options = DepositOptions.objects.filter(fin_prdt_cd__in=fin_prdt_cds).values()
+    # # print(deposit_options)
+    
+    # if deposit_products:
+    #     response = {
+    #         "deposit_products":list(deposit_products),
+    #         "deposit_options":list(deposit_options)
+    #     }
+    #     return JsonResponse(response)
+    # else:
+    #     print("#######################################없음")
 
 
 # 포트폴리오 비율 저장

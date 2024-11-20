@@ -14,14 +14,12 @@ const store = useFinStore()
 const createRecommend = function () {
     axios({
         method:'get',
-        url:`${store.API_URL}/financial_products/get_deposit/`,
+        url:`${store.API_URL}/financial_products/save_deposit/`,
     })
-}
+
+
     
-
-
-
-
+}
 
 </script>
 

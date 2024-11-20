@@ -2,6 +2,8 @@
     <div>
         <h1>내 주변 은행 찾기</h1>
     <div id="map" style="width:500px;height:400px;"></div>
+    <ul id="ul">
+    </ul>
     </div>
 </template>
 
@@ -28,7 +30,7 @@ onMounted(() => {
   kakaoScript.onload = () => {
     // console.log('Kakao Maps 스크립트 로드 성공')
     if (window.kakao && window.kakao.maps) {
-      console.log('맵 초기화')
+      // console.log('맵 초기화')
       initializeMap(); // API가 로드된 후 지도 초기화
     } else {
       console.error("Kakao Maps API가 로드되지 않았습니다.");
@@ -39,21 +41,20 @@ onMounted(() => {
     console.error("Kakao Maps API 스크립트 로드에 실패했습니다.");
   };
   
-  console.log('태그 추가')
 });
 
 function initializeMap() {
-  console.log('initializeMap 함수 호출')
+  // console.log('initializeMap 함수 호출')
   kakao.maps.load(function(){
     const container = document.getElementById("map");
     const options = {
       center: new kakao.maps.LatLng(37.501336, 127.039643), // 초기 지도 중심 좌표
       level: 3, // 초기 확대 레벨
     };
-    console.log('지도 생성 전')
+    // console.log('지도 생성 전')
     // Kakao 지도 생성
     const map = new kakao.maps.Map(container, options);
-    console.log('지도 생성 끝')
+    // console.log('지도 생성 끝')
 
     // 은행 찾기
     searchBanks(map);
@@ -97,7 +98,7 @@ function displayMarker(map, place, infowindow) {
       `<div style="padding:5px;font-size:12px;">${place.place_name}</div>`
     );
     infowindow.open(map, marker);
-    console.log(place.place_name)
+    // console.log(place.place_name)
     createRecommend(place.place_name)
   });
 }
@@ -114,7 +115,19 @@ const createRecommend = function (bank) {
         }
     })
     .then((response) => {
-      console.log(response)
+      // 화면에 li로 출력
+      const bankInfo = response.data
+      console.log(bankInfo)
+      // const bankInfo = response.data.deposit_products
+      
+      const ulElement = document.querySelector('#ul')
+      bankInfo.forEach((item) => {
+        console.log(item)
+        const liElement = document.createElement("li")
+        liElement.textContent = `${item.kor_co_nm}, ${item.fin_prdt_nm}`
+        ulElement.appendChild(liElement)
+      })
+      
     })
     .catch((err) => {
       console.log('error')
