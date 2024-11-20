@@ -1,13 +1,18 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import axios from 'axios'
 
 export const useFinStore = defineStore('finance', () => {
-    // const token = ref(null)
     const token = ref(localStorage.getItem('token') || null);
+    // const user = ref(null) // user 정보 추가
     const API_URL = 'http://127.0.0.1:8000'
     const router = useRouter()
+    const route = useRoute()
+    const myPortfolios = ref([]) // 내가 작성한 포트폴리오 DB에서 꺼내와서 담을 변수
+    const headers = ref({
+        'Authorization': `Token ${token.value}`
+    })
 
 	const signUp = function (payload) {
 		const username = payload.username
@@ -41,13 +46,16 @@ export const useFinStore = defineStore('finance', () => {
         })
             .then(res => {
                 console.log('로그인이 완료되었습니다.')
-                console.log(res.data)
                 token.value = res.data.key
+                // console.log(res.data)
+                // user.value = res.data.user
                 localStorage.setItem('token', token.value)
                 router.push({ name: 'home' })
             })
             .catch(err => console.log(err))
     }
+
+
 
 	return { signUp, API_URL, logIn, token }
 }, { persist: true })

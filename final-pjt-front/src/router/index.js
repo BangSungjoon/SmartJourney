@@ -32,7 +32,7 @@ const router = createRouter({
       component: PortfolioView,
     },
     {
-      path: '/portfolio/list',
+      path: '/portfolio/:id',
       name: 'portlist',
       component: PortfolioListView
     },

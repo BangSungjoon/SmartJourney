@@ -3,7 +3,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.conf import settings
 import requests
-from .models import DepositOptions, DepositProducts, SavingProducts, SavingOptions, Answers
+from .models import DepositOptions, DepositProducts, SavingProducts, SavingOptions, Answers, FinancialProduct
 from .serializers import DepositOptionsSerializer, DepositProductsSerializer, ProductOptionSerializer, SavingProductsSerializer, SavingOptionsSerializer, SavingAnswerSerializer, SaveInvRatioSerializer
 from rest_framework import status
 from django.db.models import Max
@@ -204,3 +204,28 @@ def save_ratio(request, answer_id):
     if save_inv_serializer.is_valid(raise_exception=True):
         save_inv_serializer.save(answer=answer)
         return Response(save_inv_serializer.data, status=status.HTTP_201_CREATED)
+    
+@api_view(['get'])
+# @permission_classes([IsAuthenticated])
+def my_portfolios(request, user_id):
+    # 해당 user_id를 가진 모든 Answers 객체를 조회한다.
+    answers = Answers.objects.filter(user_id=user_id)
+
+    if not answers.exists():
+        return Response({'detail': 'No answers found for this user.'}, status=404)
+    
+    # Answers 객체에 연결된 모든 FinancialProduct 객체를 가져온다.
+    financial_products = []
+    for answer in answers:
+        try:
+            financial_product = FinancialProduct.objects.get(answer=answer)
+            financial_products.append(financial_product)
+        except FinancialProduct.DoesNotExist:
+            continue # 해당 Answers에 연결된 FinancialProduct가 없다면 그냥 넘어가기
+
+    # FinancialProduct 객체들을 직렬화하여 반환하기
+    if financial_products:
+        serializer = SaveInvRatioSerializer(financial_products, many=True)
+        return Response(serializer.data)
+    else:
+        return Response({"detail": "No financial products found for these answers."}, status=404)

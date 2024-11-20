@@ -76,3 +76,4 @@ class FinancialProduct(models.Model):  # 위험도에 따른 분류
     # 자산 유형(저축 상품 내)에 따른 포폴 구성 비율 저장 필드
     inst_save_ratio = models.FloatField()   # 적금/정기예금
     reg_save_ratio = models.FloatField()    # 보통예금
+    created_at = models.DateTimeField(auto_now=False, auto_now_add=True)

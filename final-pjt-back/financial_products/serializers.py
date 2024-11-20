@@ -47,3 +47,4 @@ class SaveInvRatioSerializer(serializers.ModelSerializer):
         model = FinancialProduct
         fields = '__all__'
         # read_only_fields = ('user',)
+        
