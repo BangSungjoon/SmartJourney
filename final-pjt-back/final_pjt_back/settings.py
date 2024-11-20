@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'accounts',
+    'financial_products',
     'rest_framework',
     'rest_framework.authtoken',
     'dj_rest_auth',
@@ -157,3 +158,11 @@ REST_FRAMEWORK = {
 
 
 SITE_ID = 1
+
+import os
+import environ
+
+env = environ.Env(DEBUT=(bool, True))
+environ.Env.read_env(env_file=os.path.join(BASE_DIR, '.env'))
+
+API_KEY = env('API_KEY')
