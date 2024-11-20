@@ -52,32 +52,27 @@ class Answers(models.Model):    # 답변 기록
     q7_household_status = models.CharField(max_length=100)    # 가계 상황
     # q8_average_monthly_income = models.IntegerField()  # 평균적인 월 수입
 
-class PortRisk(models.Model):  # 위험도에 따른 분류
+class FinancialProduct(models.Model):  # 위험도에 따른 분류
     answer = models.OneToOneField(Answers, on_delete=models.CASCADE, primary_key=True)
+    
+    
     # 위험도에 따른 포폴 구성 비율 저장 필드
-    low_ratio = models.FloatField()
-    med_low_ratio = models.FloatField()
-    med_ratio = models.FloatField()
-    med_high_ratio = models.FloatField()
-    high_ratio = models.FloatField()
+    low_ratio = models.FloatField()         # 저
+    med_low_ratio = models.FloatField()     # 중저
+    med_ratio = models.FloatField()         # 중
+    med_high_ratio = models.FloatField()    #중고
+    high_ratio = models.FloatField()        #고 
 
-class SaveInvType(models.Model):  # 자산 유형(저축 / 투자)에 따른 분류
-    answer = models.OneToOneField(Answers, on_delete=models.CASCADE, primary_key=True)
     # 자산 유형(저축 / 투자)에 따른 포폴 구성 비율 저장 필드
-    saving_ratio = models.FloatField()    
-    inv_ratio = models.FloatField()
+    saving_ratio = models.FloatField()    # 투자 비율
+    inv_ratio = models.FloatField()       # 저축 비율
 
-class PortInvType(models.Model): # 자산 유형(투자 상품 내)에 따른 분류
-    answer = models.OneToOneField(Answers, on_delete=models.CASCADE, primary_key=True)
     # 자산 유형(투자 상품 내)에 따른 포폴 구성 비율 저장 필드
     dom_stock_ratio = models.FloatField()   # 국내 주식형
     int_stock_ratio = models.FloatField()   # 해외 주식형
-    bond_ratio = models.FloatField()    # 채권형
+    bond_ratio = models.FloatField()        # 채권형
     alt_invest_ratio = models.FloatField()  # 대안투자
 
-
-class PortSaveType(models.Model): # 자산 유형(저축 상품 내)에 따른 분류
-    answer = models.OneToOneField(Answers, on_delete=models.CASCADE, primary_key=True)
     # 자산 유형(저축 상품 내)에 따른 포폴 구성 비율 저장 필드
-    inst_save_ratio = models.FloatField() 
-    reg_save_ratio = models.FloatField() 
+    inst_save_ratio = models.FloatField()   # 적금/정기예금
+    reg_save_ratio = models.FloatField()    # 보통예금
