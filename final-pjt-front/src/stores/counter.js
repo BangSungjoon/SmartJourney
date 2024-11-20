@@ -4,7 +4,8 @@ import { useRouter } from 'vue-router'
 import axios from 'axios'
 
 export const useFinStore = defineStore('finance', () => {
-    const token = ref(null)
+    // const token = ref(null)
+    const token = ref(localStorage.getItem('token') || null);
     const API_URL = 'http://127.0.0.1:8000'
     const router = useRouter()
 
@@ -42,6 +43,7 @@ export const useFinStore = defineStore('finance', () => {
                 console.log('로그인이 완료되었습니다.')
                 console.log(res.data)
                 token.value = res.data.key
+                localStorage.setItem('token', token.value)
                 router.push({ name: 'home' })
             })
             .catch(err => console.log(err))

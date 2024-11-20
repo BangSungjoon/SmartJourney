@@ -4,6 +4,7 @@ import HomeView from '@/views/HomeView.vue'
 import PortfolioView from '@/views/PortfolioView.vue'
 import SignUpView from '@/views/SignUpView.vue'
 import LoginView from '@/views/LoginView.vue'
+import PortfolioListView from '@/views/PortfolioListView.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -31,6 +32,11 @@ const router = createRouter({
       component: PortfolioView,
     },
     {
+      path: '/portfolio/list',
+      name: 'portlist',
+      component: PortfolioListView
+    },
+    {
 			path: '/signup',
 			name: 'SignUpView',
 			component: SignUpView
@@ -39,7 +45,7 @@ const router = createRouter({
       path: '/login',
       name: 'login',
       component: LoginView
-    }
+    },
   ],
 })
 
