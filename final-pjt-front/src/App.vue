@@ -13,7 +13,9 @@
         </template>
         <template v-else>
           <RouterLink :to="{ name:'SignUpView' }">회원 가입</RouterLink> | 
-          <RouterLink :to="{ name: 'login' }">로그인</RouterLink>
+          <RouterLink :to="{ name: 'login' }">로그인</RouterLink> |
+        <RouterLink :to="{ name: 'saveRecommend' }">예적금 추천 받기</RouterLink>
+
         </template>
       </nav>
 

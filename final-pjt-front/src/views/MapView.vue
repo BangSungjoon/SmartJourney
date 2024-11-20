@@ -7,6 +7,9 @@
 
 <script setup>
 import { onMounted } from "vue";
+import axios from "axios";
+import { useFinStore } from '@/stores/counter';
+const store = useFinStore()
 
 // 환경 변수에서 API 키를 미리 가져옵니다.
 const kakaoApiKey = import.meta.env.VITE_KAKAO_API_KEY;
@@ -94,13 +97,29 @@ function displayMarker(map, place, infowindow) {
       `<div style="padding:5px;font-size:12px;">${place.place_name}</div>`
     );
     infowindow.open(map, marker);
+    console.log(place.place_name)
+    createRecommend(place.place_name)
   });
 }
 
 
 
 // 은행 상품 받아오기
-
+const createRecommend = function (bank) {
+    axios({
+        method:'get',
+        url:`${store.API_URL}/financial_products/get_deposit/`,
+        params: {
+          bank:bank
+        }
+    })
+    .then((response) => {
+      console.log(response)
+    })
+    .catch((err) => {
+      console.log('error')
+    })
+}
 
 
 

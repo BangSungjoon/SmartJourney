@@ -9,24 +9,16 @@ from rest_framework import status
 from django.db.models import Max
 from rest_framework.decorators import permission_classes
 from rest_framework.permissions import IsAuthenticated
-from django.shortcuts import get_object_or_404
+from django.http import HttpResponse, JsonResponsefrom django.shortcuts import get_object_or_404
 
 
 
 # Create your views here.
 @api_view(['GET'])
 def save_deposit(request):
-    # api_key = settings.API_KEY
-    
-    # url = f'http://finlife.fss.or.kr/finlifeapi/depositProductsSearch.json?auth={api_key}&topFinGrpNo=020000&pageNo=1'
-    # response = requests.get(url)
-    # data = response.json()
-
-    # return JsonResponse(data)
     api_key = settings.API_KEY
     url = f'http://finlife.fss.or.kr/finlifeapi/depositProductsSearch.json?auth={api_key}&topFinGrpNo=020000&pageNo=1'
     response = requests.get(url).json()
-
     for li in response.get('result')['baseList']:
         fin_prdt_cd= li['fin_prdt_cd']
         kor_co_nm= li['kor_co_nm']
@@ -188,6 +180,20 @@ def save_saving(request):
         
     return Response(response)
 
+@api_view(['get'])
+def get_depositproducts(request):
+    bank = request.GET['bank'].split()[0]
+    deposit_products = DepositProducts.objects.filter(kor_co_nm=bank).values()
+    if deposit_products:
+        response = {
+            "deposit_products":list(deposit_products)
+        }
+        return JsonResponse(response)
+    else:
+        print("#######################################없음")
+
+
+# 포트폴리오 비율 저장
 @api_view(['post'])
 @permission_classes([IsAuthenticated])
 def save_answer(request):
