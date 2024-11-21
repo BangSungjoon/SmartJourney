@@ -4,6 +4,7 @@ import HomeView from '@/views/HomeView.vue'
 import PortfolioView from '@/views/PortfolioView.vue'
 import SignUpView from '@/views/SignUpView.vue'
 import LoginView from '@/views/LoginView.vue'
+import SaveRecommendView from '@/views/SaveRecommendView.vue'
 import PortfolioListView from '@/views/PortfolioListView.vue'
 import CurrencyExchangeView from '@/views/CurrencyExchangeView.vue'
 import MyPageView from '@/views/MyPageView.vue'
@@ -52,6 +53,11 @@ const router = createRouter({
       path: '/login',
       name: 'login',
       component: LoginView
+    },
+    {
+      path: '/saveRecommend',
+      name: 'saveRecommend',
+      component: SaveRecommendView
     },
     {
       path: '/mypage/:id',

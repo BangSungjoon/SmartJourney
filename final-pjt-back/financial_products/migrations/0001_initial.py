@@ -93,6 +93,7 @@ class Migration(migrations.Migration):
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('fin_prdt_cd', models.TextField()),
                 ('intr_rate_type_nm', models.CharField(max_length=100)),
+                ('rsrv_type_nm', models.TextField()),
                 ('intr_rate', models.FloatField()),
                 ('intr_rate2', models.FloatField()),
                 ('save_trm', models.IntegerField()),
