@@ -117,17 +117,28 @@ const createRecommend = function (bank) {
     .then((response) => {
       // 화면에 li로 출력
       const bankInfo = response.data
-      console.log(bankInfo)
-      // const bankInfo = response.data.deposit_products
-      
+      // console.log(bankInfo)
       const ulElement = document.querySelector('#ul')
-      bankInfo.forEach((item) => {
-        console.log(item)
+      // ulElement 초기화 (기존 내용 제거)
+      ulElement.innerHTML = "";
+      if (bankInfo.length === 0) {
+        const noDataElement = document.createElement("li"); 
+        noDataElement.textContent = "상품 정보가 없습니다.";
+        ulElement.appendChild(noDataElement);
+      } else {
+        bankInfo.forEach((item) => {
         const liElement = document.createElement("li")
         liElement.textContent = `${item.kor_co_nm}, ${item.fin_prdt_nm}`
         ulElement.appendChild(liElement)
-      })
-      
+                
+        item.depositoptions_set.forEach((option) => {
+        const optionLi = document.createElement("li")
+        optionLi.textContent = `- (${option.intr_rate_type_nm}, ${option.save_trm}개월) 저축 금리 : ${option.intr_rate}% / 최고 우대 금리 : ${option.intr_rate2}%`;
+        ulElement.appendChild(optionLi);
+        })            
+        })
+      }
+
     })
     .catch((err) => {
       console.log('error')
