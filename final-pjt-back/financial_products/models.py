@@ -55,7 +55,6 @@ class Answers(models.Model):    # 답변 기록
 class FinancialProduct(models.Model):  # 위험도에 따른 분류
     answer = models.OneToOneField(Answers, on_delete=models.CASCADE, primary_key=True)
     
-    
     # 위험도에 따른 포폴 구성 비율 저장 필드
     low_ratio = models.FloatField()         # 저
     med_low_ratio = models.FloatField()     # 중저
@@ -77,3 +76,16 @@ class FinancialProduct(models.Model):  # 위험도에 따른 분류
     inst_save_ratio = models.FloatField()   # 적금/정기예금
     reg_save_ratio = models.FloatField()    # 보통예금
     created_at = models.DateTimeField(auto_now=False, auto_now_add=True)
+
+################# 환률 모델 ####################
+class ChangeMoney(models.Model):
+    cur_unit = models.CharField(max_length=50)          # 통화코드
+    ttb = models.CharField(max_length=50)               # 전신환 매입율, 은행이 고객으로부터 외화를 살 때 적용하는 환율 (고객 입장에서 외화를 팔 때).
+    tts = models.CharField(max_length=50)               # 전신환 매도율, 은행이 고객에게 외화를 팔 때 적용하는 환율 (고객 입장에서 외화를 살 때).
+    deal_bas_r = models.CharField(max_length=50)        # 매매기준율, 일반적으로 사용하는 환율.
+    # bkpr = models.CharField(max_length=50)              # 장부가격
+    # yy_efee_r = models.CharField(max_length=50)
+    # ten_dd_efee_r = models.CharField(max_length=50)
+    # kftc_bkpr = models.CharField(max_length=50)
+    # kftc_deal_bas_r = models.CharField(max_length=50)
+    cur_nm = models.CharField(max_length=50)            # 국가/통화명

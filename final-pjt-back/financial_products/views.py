@@ -1,10 +1,11 @@
 from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from django.http import JsonResponse
 from django.conf import settings
 import requests
-from .models import DepositOptions, DepositProducts, SavingProducts, SavingOptions, Answers, FinancialProduct
-from .serializers import DepositOptionsSerializer, DepositProductsSerializer, ProductOptionSerializer, SavingProductsSerializer, SavingOptionsSerializer, SavingAnswerSerializer, SaveInvRatioSerializer
+from .models import DepositOptions, DepositProducts, SavingProducts, SavingOptions, Answers, FinancialProduct, ChangeMoney
+from .serializers import DepositOptionsSerializer, DepositProductsSerializer, ProductOptionSerializer, SavingProductsSerializer, SavingOptionsSerializer, SavingAnswerSerializer, SaveInvRatioSerializer, ChangeMoneySerializer
 from rest_framework import status
 from django.db.models import Max
 from rest_framework.decorators import permission_classes
@@ -206,7 +207,7 @@ def save_ratio(request, answer_id):
         return Response(save_inv_serializer.data, status=status.HTTP_201_CREATED)
     
 @api_view(['get'])
-# @permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 def my_portfolios(request, user_id):
     # 해당 user_id를 가진 모든 Answers 객체를 조회한다.
     answers = Answers.objects.filter(user_id=user_id)
@@ -229,3 +230,55 @@ def my_portfolios(request, user_id):
         return Response(serializer.data)
     else:
         return Response({"detail": "No financial products found for these answers."}, status=404)
+
+# 해당 날짜 환률 정보를 받아오고 DB에 저장하는 작업   
+@api_view(['GET'])
+def change_money(request):
+    api_key = settings.AUTH_KEY
+    url = f'https://www.koreaexim.go.kr/site/program/financial/exchangeJSON?authkey={api_key}&data=AP01'
+
+    response = requests.get(url)
+    response.raise_for_status()  # HTTP 에러 발생 시 예외 처리
+    data = response.json()  # JSON 응답 데이터를 Python 리스트로 변환
+    if data:                # 데이터가 있을 때만 DB갱신 오늘 날짜 기준 오전 11시 이전엔 빈배열이 올 수 있음
+        for li in data:
+            if li['result'] == 1:   # 조회 결과가 성공일때만 DB 갱신
+                cur_unit = li['cur_unit']
+                ttb = li['ttb']
+                tts = li['tts']
+                deal_bas_r = li['deal_bas_r']
+                cur_nm = li['cur_nm']
+
+                # 동일한 정보가 DB에 있다면, 넘어갑시다!
+                if ChangeMoney.objects.filter(
+                    cur_unit=cur_unit,
+                    ttb=ttb,
+                    tts=tts,
+                    deal_bas_r=deal_bas_r,
+                    cur_nm=cur_nm
+                ):
+                    continue
+                # serializer 사용해서 데이터 저장
+                save_data = {
+                    'cur_unit': cur_unit,
+                    'ttb': ttb,
+                    'tts': tts,
+                    'deal_bas_r': deal_bas_r,
+                    'cur_nm': cur_nm
+                }
+                serializer = ChangeMoneySerializer(data=save_data)
+                if serializer.is_valid(raise_exception=True):
+                    serializer.save()
+
+    # serializer = ChangeMoneySerializer(many=True)
+    # return Response(serializer.data)
+
+    return Response(data)
+
+# DB에 저장된 환률 정보를 반환하는 함수
+# DB에 저장과 반환을 동시에 하지 않는 이유는 환률정보 API 호출 제한이 있기 때문에 따로 수행
+@api_view(['GET'])
+def exchange(request):
+    money = ChangeMoney.objects.all()
+    serializer = ChangeMoneySerializer(money, many=True)
+    return Response(serializer.data)

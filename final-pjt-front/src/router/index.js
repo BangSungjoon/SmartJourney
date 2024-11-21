@@ -5,6 +5,7 @@ import PortfolioView from '@/views/PortfolioView.vue'
 import SignUpView from '@/views/SignUpView.vue'
 import LoginView from '@/views/LoginView.vue'
 import PortfolioListView from '@/views/PortfolioListView.vue'
+import CurrencyExchangeView from '@/views/CurrencyExchangeView.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -35,6 +36,11 @@ const router = createRouter({
       path: '/portfolio/:id',
       name: 'portlist',
       component: PortfolioListView
+    },
+    {
+      path: '/currency_exchange',
+      name: 'currencyExchange',
+      component: CurrencyExchangeView
     },
     {
 			path: '/signup',

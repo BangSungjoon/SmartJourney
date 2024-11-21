@@ -27,9 +27,8 @@
 <script setup>
 import PortfolioChart from '@/components/PortfolioChart.vue';
 import axios from 'axios'
-import { onMounted, ref, watch } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
-import { RouterLink, RouterView } from 'vue-router'
 import { useFinStore } from '@/stores/counter'
 
 const store = useFinStore()
@@ -61,7 +60,3 @@ const clickDetail = function (portfolio) {
     selectedPortfolio.value = portfolio
 }
 </script>
-
-<style lang="scss" scoped>
-
-</style>

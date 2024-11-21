@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import DepositProducts, DepositOptions, SavingProducts, SavingOptions, Answers, FinancialProduct
+from .models import DepositProducts, DepositOptions, SavingProducts, SavingOptions, Answers, FinancialProduct, ChangeMoney
 
 
 class DepositProductsSerializer(serializers.ModelSerializer):
@@ -47,4 +47,8 @@ class SaveInvRatioSerializer(serializers.ModelSerializer):
         model = FinancialProduct
         fields = '__all__'
         # read_only_fields = ('user',)
-        
+
+class ChangeMoneySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ChangeMoney
+        fields = '__all__'
