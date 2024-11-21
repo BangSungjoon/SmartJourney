@@ -35,6 +35,20 @@ class SavingOptionsSerializer(serializers.ModelSerializer):
         model = SavingOptions
         fields = '__all__'
         read_only_fields = ('product',)
+        
+ # 적금 옵션까지       
+class SavingProductOptionsSerializer(serializers.ModelSerializer):
+    class SavingOptionSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = SavingOptions
+            fields = '__all__'
+    
+    savingoptions_set = SavingOptionSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = SavingProducts
+        fields = '__all__'
+    
 
 class SavingAnswerSerializer(serializers.ModelSerializer):
     class Meta:

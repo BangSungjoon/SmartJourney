@@ -5,7 +5,7 @@ from django.http import JsonResponse
 from django.conf import settings
 import requests
 from .models import DepositOptions, DepositProducts, SavingProducts, SavingOptions, Answers, FinancialProduct, ChangeMoney
-from .serializers import DepositOptionsSerializer, DepositProductsSerializer, ProductOptionSerializer, SavingProductsSerializer, SavingOptionsSerializer, SavingAnswerSerializer, SaveInvRatioSerializer, ChangeMoneySerializer
+from .serializers import DepositOptionsSerializer, DepositProductsSerializer, ProductOptionSerializer, SavingProductsSerializer, SavingOptionsSerializer, SavingAnswerSerializer, SaveInvRatioSerializer, ChangeMoneySerializer, SavingProductOptionsSerializer
 from rest_framework import status
 from django.db.models import Max
 from rest_framework.decorators import permission_classes
@@ -366,13 +366,24 @@ def get_depositproducts(request):
     else:
        return Response([], status=200)
 
-# 예적금 추천
+# 예금 추천
 @api_view(['get'])
 def recommend_deposit(request):
     bank = request.GET['bank']
     products = DepositProducts.objects.filter(kor_co_nm=bank).prefetch_related('depositoptions_set').all()
     if products:
         serializer = ProductOptionSerializer(products, many=True)
+        return Response(serializer.data)
+    else:
+       return Response([], status=200)
+   
+# 적금 추천
+@api_view(['get'])
+def recommend_savings(request):
+    bank = request.GET['bank']
+    products = SavingProducts.objects.filter(kor_co_nm=bank).prefetch_related('savingoptions_set').all()
+    if products:
+        serializer = SavingProductOptionsSerializer(products, many=True)
         return Response(serializer.data)
     else:
        return Response([], status=200)
