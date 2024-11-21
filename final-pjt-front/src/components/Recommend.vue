@@ -52,6 +52,7 @@ const bankName = ref([])
 
 // 이름 등록
 onMounted( ()=> {
+    createRecommend()
     axios({
         method:'get',
         url:`${store.API_URL}/financial_products/save_deposit/`,
@@ -63,6 +64,15 @@ onMounted( ()=> {
     //    console.log(bankName.value)
     })
 })
+
+const createRecommend = function () {
+    axios({
+        method:'get',
+        url:`${store.API_URL}/financial_products/save_deposit_savings/`,
+    })
+}
+
+
 
 // 상품 조회
 const selectBank = function (event) {

@@ -1,8 +1,8 @@
 <template>
     <div>
         <h1>예적금 추천 받기</h1>
-        <form :action="`${store.API_URL}/financial_products/save_deposit/`"></form>
-        <button @click.prevent="createRecommend">예금 적금 db 저장</button>
+        <!-- <form :action="`${store.API_URL}/financial_products/save_deposit/`"></form>
+        <button @click.prevent="createRecommend">예금 적금 db 저장</button> -->
         <form :action="`${store.API_URL}/financial_products/save_deposit/`"></form>
         <button @click.prevent="dePositRecommend">정기 예금 추천 받기</button>
         <!-- <form :action="`${store.API_URL}/financial_products/save_deposit/`"></form>
@@ -23,15 +23,15 @@ const createRecommend = function () {
         url:`${store.API_URL}/financial_products/save_deposit_savings/`,
     })
 }
-const recommend_deposit = function (bank) {
-    axios({
-        method:'get',
-        url:`${store.API_URL}/financial_products/recommend_deposit/`,
-        params: {
-          bank:bank
-        }
-    })
-}
+// const recommend_deposit = function (bank) {
+//     axios({
+//         method:'get',
+//         url:`${store.API_URL}/financial_products/recommend_deposit/`,
+//         params: {
+//           bank:bank
+//         }
+//     })
+// }
 </script>
 
 <style scoped>
