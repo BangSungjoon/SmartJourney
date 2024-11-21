@@ -6,6 +6,7 @@ import SignUpView from '@/views/SignUpView.vue'
 import LoginView from '@/views/LoginView.vue'
 import PortfolioListView from '@/views/PortfolioListView.vue'
 import CurrencyExchangeView from '@/views/CurrencyExchangeView.vue'
+import MyPageView from '@/views/MyPageView.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -51,6 +52,11 @@ const router = createRouter({
       path: '/login',
       name: 'login',
       component: LoginView
+    },
+    {
+      path: '/mypage/:id',
+      name: 'mypage',
+      component: MyPageView
     },
   ],
 })

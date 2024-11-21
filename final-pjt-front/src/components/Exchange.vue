@@ -53,24 +53,6 @@ const choice = function () {
     korMoney.value = foreignMoney.value*dealBasR
     selectCountry.value = country.cur_unit
 }
-
-// foreignMoney 값이 변경될 때마다 korMoney 값을 갱신하도록 watch 추가
-// watch(foreignMoney, (newVal, oldVal) => {
-//     if (selectedExchange.value) {
-//         const country = exchange.value.find(ex => ex.id == selectedExchange.value)
-//         const dealBasR = parseFloat(country.deal_bas_r.replace(/,/g, ''))
-//         korMoney.value = newVal * dealBasR
-//     }
-// })
-
-// // korMoney 값이 변경될 때마다 foreignMoney 값을 갱신
-// watch(korMoney, (newVal, oldVal) => {
-//     if (selectedExchange.value) {
-//         const country = exchange.value.find(ex => ex.id == selectedExchange.value)
-//         const dealBasR = parseFloat(country.deal_bas_r.replace(/,/g, ''))
-//         foreignMoney.value = newVal / dealBasR
-//     }
-// })
 const updateKorMoney = () => {
   const rate = getRate();
   korMoney.value = (foreignMoney.value * rate).toFixed(2);
