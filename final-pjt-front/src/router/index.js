@@ -8,6 +8,7 @@ import SaveRecommendView from '@/views/SaveRecommendView.vue'
 import PortfolioListView from '@/views/PortfolioListView.vue'
 import CurrencyExchangeView from '@/views/CurrencyExchangeView.vue'
 import MyPageView from '@/views/MyPageView.vue'
+import MyPageCartView from '@/views/MyPageCartView.vue'
 import ProductDetailView from '@/views/ProductDetailView.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -17,14 +18,6 @@ const router = createRouter({
       name: 'home',
       component: HomeView,
     },
-    // {
-    //   path: '/about',
-    //   name: 'about',
-    //   // route level code-splitting
-    //   // this generates a separate chunk (About.[hash].js) for this route
-    //   // which is lazy-loaded when the route is visited.
-    //   component: () => import('../views/AboutView.vue'),
-    // },
     {
       path:'/map',
       name:'map',
@@ -60,10 +53,40 @@ const router = createRouter({
       name: 'saveRecommend',
       component: SaveRecommendView
     },
+    // 마이페이지
+    // {
+    //   path: '/mypage/:id',
+    //   name: 'mypage',
+    //   component: MyPageView
+    // },
+    // {
+    //   path: '/mypage/:id/cart',
+    //   name: 'mypage-cart',
+    //   component: MyPageCartView
+    // },
     {
       path: '/mypage/:id',
-      name: 'mypage',
-      component: MyPageView
+      // name: 'mypage',
+      component: MyPageView,
+      props: true, // props로 id 값을 전달
+      children: [
+        // {
+        //   path: '', // 기본 경로를 빈 문자열로 설정
+        //   redirect: 'cart', // 기본적으로 cart로 리다이렉트
+        // },
+        {
+          path: 'cart',
+          name: 'mypage-cart',
+          component: MyPageCartView,
+          props: true, // id 값을 전달
+        },
+        {
+          path: 'portfolio',
+          name: 'mypage-portlist',
+          component: PortfolioListView,
+          props: true, // id 값을 전달
+        },
+      ],
     },
     {
       path: '/productDetail/:id',

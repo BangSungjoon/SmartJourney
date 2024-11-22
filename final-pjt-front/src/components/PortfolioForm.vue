@@ -78,6 +78,7 @@ const goalMoney = ref(null)
 const job = ref('job-fulltime')
 const family = ref('family-solo-dependent')
 
+
 const createPortfolio = function () {
     if (!term.value || !goalMoney.value) {
         alert('필수 입력 항목을 채워주세요.');
@@ -85,10 +86,6 @@ const createPortfolio = function () {
     }
     // riskPort()
     createAnswer()
-    // sendRatio()
-    // console.log(SaveInvTypeFunc())
-    // console.log(PortInvType())
-    // console.log(PortSaveType())
 }
 
 const createAnswer = function () {
@@ -111,7 +108,8 @@ const createAnswer = function () {
         headers: headers // 헤더 추가
     }).then((res) => {
         console.log('answer 저장 성공')
-        router.push({ name: 'home' })
+        console.log(store.currentUserId)
+        router.push({ name: 'portlist', params: { id: store.currentUserId } })
         const answerId = res.data.id
         sendRatio(answerId)
     }).catch(err => console.log(err))
