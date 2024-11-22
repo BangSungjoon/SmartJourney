@@ -387,6 +387,32 @@ def recommend_savings(request):
         return Response(serializer.data)
     else:
        return Response([], status=200)
+    
+
+
+# 예금 추천 상세
+
+@api_view(['get'])
+def recommend_deposit_datail(request):
+    fincode = request.GET['fincode']
+    products = DepositProducts.objects.filter(fin_prdt_cd=fincode).prefetch_related('depositoptions_set').all()
+    if products:
+        serializer = ProductOptionSerializer(products, many=True)
+        return Response(serializer.data)
+    else:
+       return Response([], status=200)
+
+
+# 적금 추천 상세
+@api_view(['get'])
+def recommend_savings_detail(request):
+    fincode = request.GET['fincode']
+    products = SavingProducts.objects.filter(fin_prdt_cd=fincode).prefetch_related('savingoptions_set').all()
+    if products:
+        serializer = SavingProductOptionsSerializer(products, many=True)
+        return Response(serializer.data)
+    else:
+       return Response([], status=200)
 
 
 # 포트폴리오 비율 저장

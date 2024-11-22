@@ -8,6 +8,8 @@ urlpatterns = [
     path('get_deposit/', views.get_depositproducts), # 정기 예금 조회(지도)
     path('recommend_deposit/', views.recommend_deposit), # 정기 예금 조회(추천)
     path('recommend_savings/', views.recommend_savings),
+    path('recommend_deposit_datail/', views.recommend_deposit_datail),
+    path('recommend_savings_detail/', views.recommend_savings_detail),
     path('save_saving/', views.save_saving, name='saving'),
     path('save_answer/', views.save_answer, name='answer'),
     path('save_ratio/<int:answer_id>/', views.save_ratio),

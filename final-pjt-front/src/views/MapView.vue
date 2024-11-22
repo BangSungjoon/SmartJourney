@@ -40,6 +40,7 @@ onMounted(() => {
   kakaoScript.onerror = () => {
     console.error("Kakao Maps API 스크립트 로드에 실패했습니다.");
   };
+  createRecommend(place.place_name)
   
 });
 
@@ -144,12 +145,6 @@ const createRecommend = function (bank) {
       console.log('error')
     })
 }
-
-
-
-
-
-
 
 </script>
 
