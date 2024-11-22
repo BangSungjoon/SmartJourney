@@ -85,10 +85,10 @@ const createPortfolio = function () {
     }
     // riskPort()
     createAnswer()
-    console.log(SaveInvTypeFunc())
-    console.log(PortInvType())
-    console.log(PortSaveType())
-    store.risk_port = riskPort()
+    // sendRatio()
+    // console.log(SaveInvTypeFunc())
+    // console.log(PortInvType())
+    // console.log(PortSaveType())
 }
 
 const createAnswer = function () {
@@ -109,11 +109,70 @@ const createAnswer = function () {
             q7_household_status: family.value,
         },
         headers: headers // 헤더 추가
-    }).then(() => {
-        console.log('db 저장 성공')
+    }).then((res) => {
+        console.log('answer 저장 성공')
         router.push({ name: 'home' })
+        const answerId = res.data.id
+        sendRatio(answerId)
     }).catch(err => console.log(err))
 }
+// 비율 저장하는 함수
+const sendRatio = function (answerId) {
+    const token = store.token // 실제 사용자 토큰 값으로 대체
+
+    const risk_port_return = riskPort() // 투자vs저축 return값
+    const risk_low = risk_port_return.risk_low
+    const risk_m_low = risk_port_return.risk_m_low
+    const risk_m = risk_port_return.risk_m
+    const risk_m_high = risk_port_return.risk_m_high
+    const risk_high = risk_port_return.risk_high
+
+    const save_inv_return = SaveInvTypeFunc() // 투자vs저축 return값
+    const saving_score = save_inv_return.saving_score
+    const inv_score = save_inv_return.inv_score
+
+    const port_inv_return = PortInvType() // 투자 내 상품비율 return 값
+    const dom_stock_score = port_inv_return.dom_stock_score
+    const int_stock_score = port_inv_return.int_stock_score
+    const bond_score = port_inv_return.bond_score
+    const alt_invest_score = port_inv_return.alt_invest_score
+    
+    const port_save_return = PortSaveType() // 저축 내 상품비율 return 값
+    const reg_save_score = port_save_return.reg_save_score
+    const inst_save_score = port_save_return.inst_save_score
+
+    const headers = {
+    'Authorization': `Token ${token}`,
+    };
+
+    axios({
+        method: 'post',
+        url: `${store.API_URL}/financial_products/save_ratio/${answerId}/`,
+        data: {
+            answer: answerId,
+            low_ratio:risk_low,
+            med_low_ratio:risk_m_low,
+            med_ratio:risk_m,
+            med_high_ratio:risk_m_high,
+            high_ratio:risk_high,
+            saving_ratio: saving_score,
+            inv_ratio: inv_score,
+            dom_stock_ratio: dom_stock_score,
+            int_stock_ratio: int_stock_score,
+            bond_ratio: bond_score,
+            alt_invest_ratio: alt_invest_score,
+            inst_save_ratio: inst_save_score,
+            reg_save_ratio: reg_save_score,
+        },
+        headers: headers // 헤더 추가
+    }).then(() => {
+        console.log('ratio 저장 성공')
+        router.push({ name: 'portresult' })
+    }).catch(err => {
+        console.log(err)
+    })
+}
+
 
 const riskPort = function () {
     let risk_low = 0      // 저위험
@@ -236,7 +295,7 @@ const riskPort = function () {
     });
     [risk_low, risk_m_low, risk_m, risk_m_high, risk_high] = riskArray
     console.log([risk_low, risk_m_low, risk_m, risk_m_high, risk_high])
-    return riskArray
+    return {risk_low, risk_m_low, risk_m, risk_m_high, risk_high}
 }
 
 // 저축 vs 투자
