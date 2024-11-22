@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from django.http import JsonResponse
 from django.conf import settings
 import requests
-from .models import DepositOptions, DepositProducts, SavingProducts, SavingOptions, Answers, FinancialProduct, ChangeMoney
+from .models import DepositOptions, DepositProducts, SavingProducts, SavingOptions, Answers, FinancialProduct, ChangeMoney, SupportServiceList, SupportServiceDetail
 from .serializers import DepositOptionsSerializer, DepositProductsSerializer, ProductOptionSerializer, SavingProductsSerializer, SavingOptionsSerializer, SavingAnswerSerializer, SaveInvRatioSerializer, ChangeMoneySerializer, SavingProductOptionsSerializer
 from rest_framework import status
 from django.db.models import Max
@@ -534,6 +534,7 @@ def get_user_portfolios(request, user_id):
     return Response(serializer.data)
 
 ############### 보조금 찾기 ###############
+# 보조금 서비스 리스트
 @api_view(['GET'])
 def subsidy_list_save(request):
     api_key = settings.SUBSIDY_KEY
@@ -542,40 +543,46 @@ def subsidy_list_save(request):
         response = requests.get(url)
         data = response.json()  # JSON 응답 데이터를 Python 리스트로 변환
         # print(data['data'][0])
-        # for li in data['data']:
+        for li in data['data']:
+            service = SupportServiceList(
+                service_id=li['서비스ID'],  # 기본 키
+                support_type=li['지원유형'],
+                service_nm=li['서비스명'],
+                service_pur=li['서비스목적요약'],
+                eligibility=li['지원대상'],
+                selection_criteria=li['선정기준'],
+                support_details=li['지원내용'],
+                application_method=li['신청방법'],
+                application_deadline=li.get('신청기한', None),
+                detail_url=li['상세조회URL'],
+                agency_code=li['소관기관코드'],
+                agency_name=li['소관기관명'],
+                part_nm=li.get('부서명', None),
+                agency_type=li['소관기관유형'],
+                user_class=li['사용자구분'],
+                service_class=li['서비스분야'],
+                reception_agency=li.get('접수기관', None),
+                contact_number=li.get('전화문의', None),
+            )
+            service.save()
 
-    
-    # if data:                # 데이터가 있을 때만 DB갱신 오늘 날짜 기준 오전 11시 이전엔 빈배열이 올 수 있음
-    #     for li in data:
-    #         if li['result'] == 1:   # 조회 결과가 성공일때만 DB 갱신
-    #             cur_unit = li['cur_unit']
-    #             ttb = li['ttb']
-    #             tts = li['tts']
-    #             deal_bas_r = li['deal_bas_r']
-    #             cur_nm = li['cur_nm']
+    return Response(data)
 
-    #             # 동일한 정보가 DB에 있다면, 넘어갑시다!
-    #             if ChangeMoney.objects.filter(
-    #                 cur_unit=cur_unit,
-    #                 ttb=ttb,
-    #                 tts=tts,
-    #                 deal_bas_r=deal_bas_r,
-    #                 cur_nm=cur_nm
-    #             ):
-    #                 continue
-    #             # 동일한 cur_unit 데이터 삭제
-    #             ChangeMoney.objects.filter(cur_unit=cur_unit).delete()
-
-    #             # serializer 사용해서 데이터 저장
-    #             save_data = {
-    #                 'cur_unit': cur_unit,
-    #                 'ttb': ttb,
-    #                 'tts': tts,
-    #                 'deal_bas_r': deal_bas_r,
-    #                 'cur_nm': cur_nm
-    #             }
-    #             serializer = ChangeMoneySerializer(data=save_data)
-    #             if serializer.is_valid(raise_exception=True):
-    #                 serializer.save()
+# 보조금 서비스 디테일
+@api_view(['GET'])
+def subsidy_detail_save(request):
+    api_key = settings.SUBSIDY_KEY
+    for page in range(1, 102):
+        url = f'https://api.odcloud.kr/api/gov24/v3/serviceDetail?page={page}&serviceKey={api_key}&perPage=100'
+        response = requests.get(url)
+        data = response.json()  # JSON 응답 데이터를 Python 리스트로 변환
+        for li in data['data']:
+            service = SupportServiceDetail(
+                service = get_object_or_404(SupportServiceList, pk=li['서비스ID']),
+                document=li.get('구비서류', None),
+                apply_url=li.get('온라인신청사이트URL', None),
+                update_date=li.get('수정일시', None),
+            )
+            service.save()
 
     return Response(data)

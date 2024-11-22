@@ -87,9 +87,40 @@ class ChangeMoney(models.Model):
     ttb = models.CharField(max_length=50)               # 전신환 매입율, 은행이 고객으로부터 외화를 살 때 적용하는 환율 (고객 입장에서 외화를 팔 때).
     tts = models.CharField(max_length=50)               # 전신환 매도율, 은행이 고객에게 외화를 팔 때 적용하는 환율 (고객 입장에서 외화를 살 때).
     deal_bas_r = models.CharField(max_length=50)        # 매매기준율, 일반적으로 사용하는 환율.
-    # bkpr = models.CharField(max_length=50)              # 장부가격
-    # yy_efee_r = models.CharField(max_length=50)
-    # ten_dd_efee_r = models.CharField(max_length=50)
-    # kftc_bkpr = models.CharField(max_length=50)
-    # kftc_deal_bas_r = models.CharField(max_length=50)
     cur_nm = models.CharField(max_length=50)            # 국가/통화명
+
+################# 보조금 ####################
+# 보조금 서비스 리스트
+class SupportServiceList(models.Model):
+    service_id = models.CharField(max_length=50, primary_key=True)  # 서비스 ID를 기본 키로 설정
+    support_type = models.CharField(max_length=100)           # 지원 유형
+    service_nm = models.CharField(max_length=200)           # 서비스명
+    service_pur = models.TextField(null=True)                      # 서비스 목적 요약
+    eligibility = models.TextField(null=True)                          # 지원 대상
+    selection_criteria = models.TextField(null=True)                   # 선정 기준
+    support_details = models.TextField(null=True)                      # 지원 내용
+    application_method = models.TextField(null=True)                   # 신청 방법
+    application_deadline = models.CharField(max_length=100, blank=True, null=True)  # 신청 기한
+    detail_url = models.URLField(null=True)                            # 상세 조회 URL
+    agency_code = models.CharField(max_length=50, null=True)             # 소관 기관 코드
+    agency_name = models.CharField(max_length=200, null=True)            # 소관 기관명
+    part_nm = models.CharField(max_length=200, blank=True, null=True)  # 부서명
+    agency_type = models.CharField(max_length=100, null=True)            # 소관 기관 유형
+    user_class = models.CharField(max_length=100, null=True)             # 사용자 구분
+    service_class = models.CharField(max_length=100, null=True)          # 서비스 분야
+    reception_agency = models.CharField(max_length=200, blank=True, null=True)  # 접수 기관
+    contact_number = models.CharField(max_length=50, blank=True, null=True)     # 전화 문의
+
+    def __str__(self):
+        return self.service_nm
+    
+# 보조금 서비스 상세 정보
+class SupportServiceDetail(models.Model):
+    service = models.OneToOneField(SupportServiceList, on_delete=models.CASCADE, primary_key=True)
+    document = models.TextField(null=True)
+    apply_url = models.URLField(null=True) 
+    update_date = models.CharField(max_length=50, null=True)
+
+# 보조금 지원 조건
+# class SupportConditions(models.Model):
+#     service = models.ForeignKey("financial_products.SupportServiceList", on_delete=models.CASCADE, primary_key=True)

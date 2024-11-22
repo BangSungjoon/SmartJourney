@@ -19,4 +19,5 @@ urlpatterns = [
     path('exchange/', views.exchange),
     path('portfolio/<int:portfolio_id>/', views.delete_portfolio),
     path('subsidy_list_save/', views.subsidy_list_save),
+    path('subsidy_detail_save/', views.subsidy_detail_save),
 ]
