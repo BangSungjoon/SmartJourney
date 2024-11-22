@@ -8,6 +8,7 @@ import SaveRecommendView from '@/views/SaveRecommendView.vue'
 import PortfolioListView from '@/views/PortfolioListView.vue'
 import CurrencyExchangeView from '@/views/CurrencyExchangeView.vue'
 import MyPageView from '@/views/MyPageView.vue'
+import ProductDetailView from '@/views/ProductDetailView.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -64,6 +65,13 @@ const router = createRouter({
       name: 'mypage',
       component: MyPageView
     },
+    {
+      path: '/productDetail/:id',
+      name: 'productDetail',
+      component: ProductDetailView,
+      props: true, // params를 props로 전달
+    },
+
   ],
 })
 
