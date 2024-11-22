@@ -52,3 +52,13 @@ class ChangeMoneySerializer(serializers.ModelSerializer):
     class Meta:
         model = ChangeMoney
         fields = '__all__'
+
+# 작성자 정보가 포함된 포트폴리오 데이터를 만드는 serializer
+class FinancialProductSerializer(serializers.ModelSerializer):
+    # 작성자를 포함하기 위해 nested serializer 설정
+    user = serializers.CharField(source='answer.user.username', read_only=True)
+    user_id = serializers.IntegerField(source='answer.user.id', read_only=True)
+
+    class Meta:
+        model = FinancialProduct
+        fields = '__all__'

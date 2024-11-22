@@ -167,3 +167,4 @@ environ.Env.read_env(env_file=os.path.join(BASE_DIR, '.env'))
 
 API_KEY = env('API_KEY')
 AUTH_KEY = env('AUTH_KEY')
+SUBSIDY_KEY = env('SUBSIDY_KEY')
