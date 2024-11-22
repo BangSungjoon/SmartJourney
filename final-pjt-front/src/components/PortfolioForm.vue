@@ -2,7 +2,7 @@
     <div>
         <form @submit.prevent="createPortfolio">
             <div class="mb-3">
-                <label for="termInput" class="form-label">1. 목표를 언제까지 달성하고 싶으신가요? (단위: 년)</label>
+                <label for="termInput" class="form-label">목표를 언제까지 달성하고 싶으신가요? (단위: 년)</label>
                 <input type="number" class="form-control" id="termInput" v-model="term">
                 <div id="termHelp" class="form-text">단기 (1년 이내), 중기 (1~5년), 장기 (5년 이상), 1년 이내는 1년으로 작성해주세요.</div>
             </div>
@@ -83,11 +83,12 @@ const createPortfolio = function () {
         alert('필수 입력 항목을 채워주세요.');
         return;
     }
-    riskPort()
+    // riskPort()
     createAnswer()
     console.log(SaveInvTypeFunc())
     console.log(PortInvType())
     console.log(PortSaveType())
+    store.risk_port = riskPort()
 }
 
 const createAnswer = function () {
@@ -235,6 +236,7 @@ const riskPort = function () {
     });
     [risk_low, risk_m_low, risk_m, risk_m_high, risk_high] = riskArray
     console.log([risk_low, risk_m_low, risk_m, risk_m_high, risk_high])
+    return riskArray
 }
 
 // 저축 vs 투자

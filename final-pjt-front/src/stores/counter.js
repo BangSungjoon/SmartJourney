@@ -46,6 +46,6 @@ export const useFinStore = defineStore('finance', () => {
             })
             .catch(err => console.log(err))
     }
-
-	return { signUp, API_URL, logIn, token }
+    const risk_port = ref([0, 0, 0, 0, 0])
+	return { signUp, API_URL, logIn, token, risk_port }
 }, { persist: true })
