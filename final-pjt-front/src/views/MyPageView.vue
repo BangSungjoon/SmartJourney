@@ -6,14 +6,15 @@
                 <RouterView />
             </div>
             <div class="col-3">
-                <div>
-                    <RouterLink :to="{ name: 'mypage-cart' }">
+                <div class="sidebar-menu">
+                    <RouterLink :to="{ name: 'mypage-cart' }" class="menu-item">
                         내가 찜한 예/적금 상품
                     </RouterLink>
-                </div>
-                <div>
-                    <RouterLink :to="{ name: 'mypage-portlist' }">
+                    <RouterLink :to="{ name: 'mypage-portlist' }" class="menu-item">
                         내 포트폴리오
+                    </RouterLink>
+                    <RouterLink :to="{ name: 'mypage-subsidy' }" class="menu-item">
+                        내 맞춤 보조금
                     </RouterLink>
                 </div>
             </div>
@@ -56,3 +57,31 @@ onMounted(() => {
     }
 })
 </script>
+
+<style scoped>
+.sidebar-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+}
+
+.menu-item {
+    padding: 10px;
+    text-decoration: none;
+    color: #333;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.menu-item:hover {
+    background-color: #e9ecef;
+}
+
+.router-link-active {
+    background-color: #4CAF50;
+    color: white;
+}
+</style>

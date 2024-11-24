@@ -9,6 +9,7 @@
         <RouterLink :to="{ name: 'currencyExchange' }">환율 계산기</RouterLink> |
         <RouterLink :to="{ name:'portfolio' }">나만의 금융 포트폴리오</RouterLink> |
         <RouterLink :to="{ name: 'saveRecommend' }">예적금 추천 받기</RouterLink> |
+        <RouterLink :to="{ name: 'subsidy' }">보조금 찾기</RouterLink> |
         <template v-if="isLoggedIn">
           <template v-if="userId !== null">
             <RouterLink :to="{ name: 'mypage-cart', params: { id: userId } }">마이페이지</RouterLink> |

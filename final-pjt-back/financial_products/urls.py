@@ -20,4 +20,8 @@ urlpatterns = [
     path('portfolio/<int:portfolio_id>/', views.delete_portfolio),
     path('subsidy_list_save/', views.subsidy_list_save),
     path('subsidy_detail_save/', views.subsidy_detail_save),
+    path('support_conditions_save/', views.support_conditions_save),
+    path('user_conditions_save/', views.user_conditions_save),
+    path('matching_subsidies/', views.matching_subsidies, name='matching_subsidies'),
+    path('<str:product_type>_products/<str:product_id>/like/', views.toggle_product_like, name='toggle_product_like'),
 ]

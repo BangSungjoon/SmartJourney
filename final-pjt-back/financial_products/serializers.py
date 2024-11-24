@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from .models import DepositProducts, DepositOptions, SavingProducts, SavingOptions, Answers, FinancialProduct, ChangeMoney
+from .models import DepositProducts, DepositOptions, SavingProducts, SavingOptions, Answers, FinancialProduct, ChangeMoney, UserConditions, SupportServiceList
+from datetime import datetime
 
 
 class DepositProductsSerializer(serializers.ModelSerializer):
@@ -76,3 +77,69 @@ class FinancialProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = FinancialProduct
         fields = '__all__'
+
+# 사용자 조건 정보
+class UserConditionsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserConditions
+        fields = [
+            'birth_year',
+            'gender',
+            'income_level',
+            'is_expecting',
+            'is_pregnant',
+            'is_birth',
+            'occupation',
+            'student_status',
+            'is_multicultural',
+            'is_north_defector',
+            'is_single_parent',
+            'is_single_person',
+            'is_many_children',
+            'is_no_house',
+            'is_new_resident',
+            'business_status',
+            'business_type',
+            'is_disabled',
+            'is_veteran',
+            'is_patient'
+        ]
+        read_only_fields = ('user', 'created_at', 'updated_at')
+        extra_kwargs = {
+            'birth_year': {'required': True, 'min_value': 1},
+            'gender': {'required': True},
+            'income_level': {'required': True},
+            'occupation': {'required': True},
+        }
+
+    def validate_birth_year(self, value):
+        if not value or value <= 0:
+            raise serializers.ValidationError("출생연도는 0보다 큰 숫자여야 합니다")
+        current_year = datetime.now().year
+        if value > current_year:
+            raise serializers.ValidationError("출생연도가 현재 연도보다 클 수 없습니다")
+        return value
+
+    def validate(self, data):
+        required_fields = ['birth_year', 'gender', 'income_level', 'occupation']
+        for field in required_fields:
+            if field not in data or not data[field]:
+                raise serializers.ValidationError(f"{field}는 필수 입력 항목입니다")
+        return data
+
+class SupportServiceListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SupportServiceList
+        fields = [
+            'service_id',
+            'support_type',
+            'service_nm',
+            'service_pur',
+            'eligibility',
+            'selection_criteria',
+            'support_details',
+            'application_method',
+            'agency_name',
+            'contact_number',
+            'detail_url'
+        ]
