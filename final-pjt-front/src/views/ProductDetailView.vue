@@ -3,7 +3,15 @@
         <h2>은행 정보</h2>
         <ul>
             <li v-for="(bank, index) in bankInfos" :key="index">
-                <strong>{{ bank.kor_co_nm }}</strong>
+                <div class="bank-header">
+                    <strong>{{ bank.kor_co_nm }}</strong>
+                    <button 
+                        @click="toggleFavorite(bank)" 
+                        :class="['favorite-btn', { 'is-favorite': isFavorite(bank) }]"
+                    >
+                        {{ isFavorite(bank) ? '찜 취소' : '찜하기' }}
+                    </button>
+                </div>
                 <p>상품명: {{ bank.fin_prdt_nm }}</p>
                 <p>상품 코드: {{ bank.fin_prdt_cd }}</p>
                 <p>가입 대상: {{ bank.join_member }}</p>
@@ -85,8 +93,58 @@ onMounted(() => {
 
 // getDetail(id)
 
+// 찜하기 상태 확인
+const isFavorite = (bank) => {
+    return bank.depositoptions_set ? 
+        store.isDepositFavorite(bank.fin_prdt_cd) : 
+        store.isSavingFavorite(bank.fin_prdt_cd);
+}
+
+// 찜하기 토글
+const toggleFavorite = async (bank) => {
+    const productType = bank.depositoptions_set ? 'deposit' : 'saving';
+    try {
+        const response = await axios({
+            method: 'post',
+            url: `${store.API_URL}/financial_products/${productType}_products/${bank.fin_prdt_cd}/like/`,
+            headers: {
+                Authorization: `Token ${store.token}`
+            }
+        });
+        
+        // DB 요청이 성공하면 store 상태 업데이트
+        if (productType === 'deposit') {
+            store.toggleDepositFavorite(bank.fin_prdt_cd);
+        } else {
+            store.toggleSavingFavorite(bank.fin_prdt_cd);
+        }
+        
+        console.log('찜하기 성공:', response.data);
+    } catch (error) {
+        console.error('찜하기 실패:', error);
+    }
+}
+
 </script>
 
 <style scoped>
+.bank-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
 
+.favorite-btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: #f0f0f0;
+}
+
+.favorite-btn.is-favorite {
+    background-color: #4CAF50;
+    color: white;
+}
 </style>

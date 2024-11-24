@@ -8,8 +8,9 @@ import SaveRecommendView from '@/views/SaveRecommendView.vue'
 import PortfolioListView from '@/views/PortfolioListView.vue'
 import CurrencyExchangeView from '@/views/CurrencyExchangeView.vue'
 import MyPageView from '@/views/MyPageView.vue'
-import ProductDetailView from '@/views/ProductDetailView.vue'
 import MyPageCartView from '@/views/MyPageCartView.vue'
+import ProductDetailView from '@/views/ProductDetailView.vue'
+import SubsidyView from '@/views/SubsidyView.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -19,13 +20,13 @@ const router = createRouter({
       component: HomeView,
     },
     {
-      path:'/map',
-      name:'map',
+      path: '/map',
+      name: 'map',
       component: MapView,
     },
     {
-      path:'/portfolio',
-      name:'portfolio',
+      path: '/portfolio',
+      name: 'portfolio',
       component: PortfolioView,
     },
     {
@@ -39,10 +40,10 @@ const router = createRouter({
       component: CurrencyExchangeView
     },
     {
-			path: '/signup',
-			name: 'SignUpView',
-			component: SignUpView
-		},
+      path: '/signup',
+      name: 'SignUpView',
+      component: SignUpView
+    },
     {
       path: '/login',
       name: 'login',
@@ -86,6 +87,11 @@ const router = createRouter({
           component: PortfolioListView,
           props: true, // id 값을 전달
         },
+        {
+          path: 'subsidy',
+          name: 'mypage-subsidy',
+          component: () => import('@/components/MySubsidy.vue')
+        }
       ],
     },
     {
@@ -93,6 +99,11 @@ const router = createRouter({
       name: 'productDetail',
       component: ProductDetailView,
       props: true, // params를 props로 전달
+    },
+    {
+      path: '/subsidy',
+      name: 'subsidy',
+      component: SubsidyView,
     },
   ],
 })

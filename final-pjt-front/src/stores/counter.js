@@ -13,9 +13,11 @@ export const useFinStore = defineStore('finance', () => {
     const headers = ref({
         'Authorization': `Token ${token.value}`
     })
+    const depositFavorites = ref([])
+    const savingFavorites = ref([])
 
-	const signUp = function (payload) {
-		const username = payload.username
+    const signUp = function (payload) {
+        const username = payload.username
         const password1 = payload.password1
         const password2 = payload.password2
         console.log(username)
@@ -23,7 +25,7 @@ export const useFinStore = defineStore('finance', () => {
         axios({
             method: 'post',
             url: `${API_URL}/accounts/signup/`,
-            data: { 
+            data: {
                 username, password1, password2
             }
         })
@@ -33,7 +35,7 @@ export const useFinStore = defineStore('finance', () => {
                 logIn({ username, password })
             })
             .catch(err => console.log(err))
-	}
+    }
     // const logIn = function (payload) {
     //     const username = payload.username
     //     const password = payload.password
@@ -103,5 +105,31 @@ export const useFinStore = defineStore('finance', () => {
     // 로그인된 사용자의 id
     const currentUserId = computed(() => userId.value)
 
-	return { signUp, API_URL, logIn, logOut, token, isLoggedIn, currentUserId }
+    const toggleDepositFavorite = (productId) => {
+        const index = depositFavorites.value.indexOf(productId);
+        if (index === -1) {
+            depositFavorites.value.push(productId);
+        } else {
+            depositFavorites.value.splice(index, 1);
+        }
+    }
+
+    const toggleSavingFavorite = (productId) => {
+        const index = savingFavorites.value.indexOf(productId);
+        if (index === -1) {
+            savingFavorites.value.push(productId);
+        } else {
+            savingFavorites.value.splice(index, 1);
+        }
+    }
+
+    const isDepositFavorite = (productId) => {
+        return depositFavorites.value.includes(productId);
+    }
+
+    const isSavingFavorite = (productId) => {
+        return savingFavorites.value.includes(productId);
+    }
+
+    return { signUp, API_URL, logIn, logOut, token, isLoggedIn, currentUserId, toggleDepositFavorite, toggleSavingFavorite, isDepositFavorite, isSavingFavorite, depositFavorites, savingFavorites }
 }, { persist: true })

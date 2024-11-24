@@ -10,22 +10,33 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
+import { useFinStore } from '@/stores/counter'
 import axios from 'axios'
 import MyCart from '@/components/MyCart.vue'
 
 const route = useRoute()
+const store = useFinStore()
 const depositProducts = ref([])
 const savingProducts = ref([])
 
 onMounted(() => {
-    const userId = route.params.id;
-
-    console.log(route.params.id)
-    axios.get(`http://127.0.0.1:8000/accounts/user/${userId}/`) // 여기서 userId로 상품을 가져옴
-        .then((res) => {
-            depositProducts.value = res.data.deposit_products;
-            savingProducts.value = res.data.saving_products;
-        })
-        .catch((err) => console.log(err))
+    // const userId = route.params.id;
+    
+    axios({
+        method: 'get',
+        url: `${store.API_URL}/accounts/user/products/`,
+        headers: {
+            Authorization: `Token ${store.token}`
+        }
+    })
+    .then((res) => {
+        depositProducts.value = res.data.deposit_products;
+        savingProducts.value = res.data.saving_products;
+        
+        // store의 favorites 상태도 업데이트
+        store.depositFavorites = res.data.deposit_products.map(p => p.fin_prdt_cd);
+        store.savingFavorites = res.data.saving_products.map(p => p.fin_prdt_cd);
+    })
+    .catch((err) => console.log(err))
 })
 </script>

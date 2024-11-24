@@ -2,7 +2,7 @@
     <div>
         <form @submit.prevent="createPortfolio">
             <div class="mb-3">
-                <label for="termInput" class="form-label">1. 목표를 언제까지 달성하고 싶으신가요? (단위: 년)</label>
+                <label for="termInput" class="form-label">목표를 언제까지 달성하고 싶으신가요? (단위: 년)</label>
                 <input type="number" class="form-control" id="termInput" v-model="term">
                 <div id="termHelp" class="form-text">단기 (1년 이내), 중기 (1~5년), 장기 (5년 이상), 1년 이내는 1년으로 작성해주세요.</div>
             </div>
