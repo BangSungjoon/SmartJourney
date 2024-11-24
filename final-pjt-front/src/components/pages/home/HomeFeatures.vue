@@ -3,8 +3,9 @@
       <!-- 첫 번째 섹션 -->
       <div class="feature-row">
         <div class="feature-text">
-          <h3>1. 금융 포폴 만들기</h3>
-          <p>돈 관리와 카드 관리를 한눈에 보고, 일정까지 스마트하게 관리해 보세요.</p>
+          <h3>맞춤형 금융 포트폴리오 만들기</h3>
+          <p>고객님의 투자 성향과 현재 재무 상황을 분석하여 위험도와 자산 유형에 딱 맞는 포트폴리오 구성을 추천해 드립니다.
+            쉽고 직관적인 질문 답변으로 나만의 금융 전략을 세우고 스마트한 자산 관리를 시작해 보세요!</p>
           <a href="#">이동 링크</a>
         </div>
         <div class="image-grid">
@@ -38,6 +39,48 @@
       </div>
     </section>
   </template>
+
+<script setup>
+import { ref, onMounted, onBeforeUnmount } from "vue";
+
+const features = ref([]); // 모든 feature-row 요소를 추적
+const observer = ref(null); // Intersection Observer 인스턴스
+
+const handleIntersection = (entries) => {
+  entries.forEach((entry) => {
+    if (entry.isIntersecting) {
+      // 요소가 보이면 'visible' 클래스 추가
+      entry.target.classList.add("visible");
+    } else {
+      // 필요 시 요소가 화면 밖으로 나가면 'visible' 클래스 제거
+      entry.target.classList.remove("visible");
+    }
+  });
+};
+
+onMounted(() => {
+  observer.value = new IntersectionObserver(handleIntersection, {
+    threshold: 0.2, // 요소가 20% 보이면 콜백 실행
+  });
+
+  // 모든 feature-row 요소를 관찰
+  features.value = document.querySelectorAll(".feature-row");
+  features.value.forEach((feature) => observer.value.observe(feature));
+});
+
+onBeforeUnmount(() => {
+  // 컴포넌트가 파괴될 때 observer 해제
+  if (observer.value) {
+    features.value.forEach((feature) =>
+      observer.value.unobserve(feature)
+    );
+    observer.value.disconnect();
+  }
+});
+</script>
+
+
+
   
   <style scoped>
   .home-features {
@@ -91,5 +134,47 @@
   border-radius: 0.625rem; /* 모서리를 둥글게 (10px = 0.625rem) */
   box-shadow: 0 0.25rem 0.625rem rgba(0, 0, 0, 0.1); /* 그림자 추가 */
 }
+
+.fade-in-fwd {
+	-webkit-animation: fade-in-fwd 1.5s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
+	        animation: fade-in-fwd 1.5s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
+}
+
+ @-webkit-keyframes fade-in-fwd {
+  0% {
+    -webkit-transform: translateZ(-80px);
+            transform: translateZ(-80px);
+    opacity: 0;
+  }
+  100% {
+    -webkit-transform: translateZ(0);
+            transform: translateZ(0);
+    opacity: 1;
+  }
+}
+@keyframes fade-in-fwd {
+  0% {
+    -webkit-transform: translateZ(-80px);
+            transform: translateZ(-80px);
+    opacity: 0;
+  }
+  100% {
+    -webkit-transform: translateZ(0);
+            transform: translateZ(0);
+    opacity: 1;
+  }
+}
+
+.feature-row {
+  opacity: 0; /* 초기 상태: 투명 */
+  transform: translateY(20px); /* 약간 아래로 이동 */
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+.feature-row.visible {
+  opacity: 1; /* 보일 때: 불투명 */
+  transform: translateY(0); /* 원래 위치 */
+}
+
   </style>
   

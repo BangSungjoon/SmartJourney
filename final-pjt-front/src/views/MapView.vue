@@ -1,66 +1,67 @@
 <template>
-    <div>
-      <!-- 소개 섹션 -->
-      <section class="hero-section">
-        <div class="hero-content">
-          <h1 class="hero-title">내 주변 은행을 찾아보세요</h1>
-          <p class="hero-description">
-            지금 가장 가까운 은행과 예금 및 적금 상품을 확인하고<br />
-            나만의 금융 플랜을 세워보세요.
-          </p>
-        </div>
+  <div>
+    <div class="store-container">
+      <!-- 상단 섹션 -->
+      <section class="store-header slide-top">
+        <h1 class="store-title">당신과 가까이에 있는 은행을 찾아보세요</h1>
+        <p class="store-subtitle">지금 가장 가까운 은행과 예금 및 적금 상품을 확인하고<br />
+          나만의 금융 플랜을 세워보세요.</p>
       </section>
+
+      <!-- 이미지 섹션 -->
+      <section class="store-image">
+        <img src="@/assets/images/portfolio/port1.jpg" alt="Store Image" class="store-main-image" />
+      </section>
+    </div>
   
-      <!-- 지도와 상품 추천 섹션 -->
-      <div class="main-content">
-        <div class="container">
-          <h1 class="title">내 주변 은행 찾기</h1>
-          <div id="map"></div>
-  
-          <!-- 은행 상품 정보 -->
-          <div class="bank-info" v-if="selectedBank">
-            <h2 class="bank-title">{{ selectedBank }}의 상품입니다</h2>
-  
-            <!-- 예금 상품 -->
-            <div class="product-section">
-              <h3>예금 상품</h3>
-              <div class="product-grid">
-                <div
-                  v-for="(product, index) in depositProducts"
-                  :key="index"
-                  class="product-item"
-                >
-                  <span class="product-badge">{{ getAlphabet(index) }}</span>
-                  <div class="product-details">
-                    <p class="product-name">{{ product.fin_prdt_nm }}</p>
-                    <p class="product-desc">{{ product.kor_co_nm }}</p>
-                    <p class="product-rate">
-                      이율: {{ product.intr_rate }}% (우대: {{ product.intr_rate2 }}%)
-                    </p>
-                    <p class="product-term">기간: {{ product.save_trm }}개월</p>
-                  </div>
+    <div class="main-layout">
+      <!-- 지도 -->
+      <div id="map" class="map-container"></div>
+
+      <!-- 리스트 (초기에는 빈 공간) -->
+      <div class="bank-info">
+        <div v-if="selectedBank">
+          <h2 class="bank-title">{{ selectedBank }}의 상품입니다</h2>
+
+          <!-- 예금 상품 -->
+          <div class="product-section">
+            <h3>예금 상품</h3>
+            <div class="product-grid">
+              <div
+                v-for="(product, index) in depositProducts"
+                :key="index"
+                class="product-item"
+              >
+                <span class="product-badge">{{ getAlphabet(index) }}</span>
+                <div class="product-details">
+                  <p class="product-name">{{ product.fin_prdt_nm }}</p>
+                  <p class="product-desc">{{ product.kor_co_nm }}</p>
+                  <p class="product-rate">
+                    이율: {{ product.intr_rate }}% (우대: {{ product.intr_rate2 }}%)
+                  </p>
+                  <p class="product-term">기간: {{ product.save_trm }}개월</p>
                 </div>
               </div>
             </div>
-  
-            <!-- 적금 상품 -->
-            <div class="product-section">
-              <h3>적금 상품</h3>
-              <div class="product-grid">
-                <div
-                  v-for="(product, index) in savingsProducts"
-                  :key="index"
-                  class="product-item"
-                >
-                  <span class="product-badge">{{ getAlphabet(index + depositProducts.length) }}</span>
-                  <div class="product-details">
-                    <p class="product-name">{{ product.fin_prdt_nm }}</p>
-                    <p class="product-desc">{{ product.kor_co_nm }}</p>
-                    <p class="product-rate">
-                      이율: {{ product.intr_rate }}% (우대: {{ product.intr_rate2 }}%)
-                    </p>
-                    <p class="product-term">기간: {{ product.save_trm }}개월</p>
-                  </div>
+          </div>
+
+          <!-- 적금 상품 -->
+          <div class="product-section">
+            <h3>적금 상품</h3>
+            <div class="product-grid">
+              <div
+                v-for="(product, index) in savingsProducts"
+                :key="index"
+                class="product-item"
+              >
+                <span class="product-badge">{{ getAlphabet(index + depositProducts.length) }}</span>
+                <div class="product-details">
+                  <p class="product-name">{{ product.fin_prdt_nm }}</p>
+                  <p class="product-desc">{{ product.kor_co_nm }}</p>
+                  <p class="product-rate">
+                    이율: {{ product.intr_rate }}% (우대: {{ product.intr_rate2 }}%)
+                  </p>
+                  <p class="product-term">기간: {{ product.save_trm }}개월</p>
                 </div>
               </div>
             </div>
@@ -68,6 +69,7 @@
         </div>
       </div>
     </div>
+  </div>
 </template>
   
 
@@ -81,9 +83,13 @@ const kakaoApiKey = import.meta.env.VITE_KAKAO_API_KEY;
 
 // 상태 관리
 const selectedBank = ref(null); // 선택된 은행
-const bankProducts = ref([]); // 은행 상품 목록
 const depositProducts = ref([]); // 예금 상품 목록
 const savingsProducts = ref([]); // 적금 상품 목록
+
+// 알파벳 반환 함수
+function getAlphabet(index) {
+  return String.fromCharCode(65 + index); // A, B, C 등 반환
+}
 
 onMounted(() => {
   const kakaoScript = document.createElement("script");
@@ -197,20 +203,6 @@ function setDefaultProducts() {
       intr_rate2: 3.0,
       save_trm: 12,
     },
-    {
-      fin_prdt_nm: "기본 예금 상품 B",
-      kor_co_nm: "은행 B",
-      intr_rate: 2.0,
-      intr_rate2: 2.8,
-      save_trm: 24,
-    },
-    {
-      fin_prdt_nm: "기본 예금 상품 C",
-      kor_co_nm: "은행 C",
-      intr_rate: 1.8,
-      intr_rate2: 2.3,
-      save_trm: 36,
-    },
   ];
 
   savingsProducts.value = [
@@ -221,93 +213,147 @@ function setDefaultProducts() {
       intr_rate2: 3.5,
       save_trm: 12,
     },
-    {
-      fin_prdt_nm: "기본 적금 상품 B",
-      kor_co_nm: "은행 B",
-      intr_rate: 2.8,
-      intr_rate2: 3.2,
-      save_trm: 24,
-    },
-    {
-      fin_prdt_nm: "기본 적금 상품 C",
-      kor_co_nm: "은행 C",
-      intr_rate: 2.5,
-      intr_rate2: 3.0,
-      save_trm: 36,
-    },
   ];
 }
 </script>
 
 
+
 <style scoped>
+/* 기본 body 설정 */
 body {
   margin: 0;
   font-family: 'Noto Sans KR', sans-serif;
-  overflow-x: hidden;
-  
-}
-
-/* Hero Section */
-.hero-section {
-  height: 100vh;
-  background: url('@/assets/images/portfolio/port1.jpg') no-repeat center center/cover;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  color: white;
-  position: relative;
-}
-
-.hero-content {
-  max-width: 800px;
-}
-
-.hero-title {
-  font-size: 2.5rem;
-  margin-bottom: 20px;
-  font-weight: bold;
-}
-
-.hero-description {
-  font-size: 1.2rem;
-  line-height: 1.6;
-}
-
-/* Main Content */
-.main-content {
-  padding: 20px;
+  color: #333;
   background-color: #f9f9f9;
 }
 
-/* 지도 */
-#map {
+/* 스토어 컨테이너 */
+.store-container {
+  text-align: center;
+  padding: 20px;
+  background-color: #fff;
+  height: 100vh; /* 배너 높이를 뷰포트 높이에 맞춤 */
+}
+
+/* 상단 섹션 */
+.store-header {
+  padding: 5%;
+}
+
+.store-title {
+  font-size: 3rem; /* 제목 크기 조정 */
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #333;
+  font-family: 'Noto Sans KR', sans-serif;
+}
+
+.store-subtitle {
+  font-size: 1rem; /* 부제목 크기 조정 */
+  margin-top: 10px;
+  line-height: 1.5;
+  color: #666;
+}
+
+/* 이미지 섹션 */
+.store-image {
+  margin: auto; /*이미지와 텍스트 간 간격 */
   width: 100%;
-  height: 500px;
-  border: 1px solid #ccc;
-  margin: 20px 0;
+  max-width: 1200px; /* 최대 너비 제한 */
+  padding: 0 20px; /* 화면 양쪽 여백 추가 */
+  box-sizing: border-box; /* 패딩 포함 크기 조정 */
+}
+
+.store-main-image {
+  width: 100%; /* 이미지가 컨테이너에 맞게 조정 */
+  height: auto; /* 비율 유지 */
+  max-height: 500px; /* 최대 높이 제한 */
+  /* border-radius: 10px; 약간의 둥근 테두리 */
+  /* box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 그림자 효과 */
+}
+
+/* 전체 레이아웃 */
+.main-layout {
+  display: flex;
+  width: 100%;
+  height: 100vh; /* 화면 전체 높이 */
+  overflow: hidden;
+}
+
+/* 지도 영역 */
+.map-container {
+  flex: 3; /* 3/5 공간 차지 */
+  height: 100%;
+  border-right: 1px solid #ddd; /* 경계선 */
+}
+
+/* 리스트 영역 */
+.bank-info {
+  flex: 2; /* 2/5 공간 차지 */
+  height: 100%;
+  background-color: white;
+  padding: 20px;
+  overflow-y: auto; /* 스크롤 가능 */
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+  font-family: 'Noto Sans KR', sans-serif;
 }
 
 /* 상품 섹션 */
-.bank-info {
-  margin-top: 20px;
-  padding: 20px;
-  background-color: white;
-  border-radius: 10px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
 .product-section {
   margin-bottom: 40px;
 }
 
 .product-grid {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: 20px;
-  justify-content: center;
 }
+
+.product-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 15px;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.product-badge {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50px;
+  height: 50px;
+  background-color: #007bff;
+  color: white;
+  border-radius: 50%;
+  font-weight: bold;
+}
+
+.product-details {
+  flex: 1;
+}
+
+  /* 애니메이션 스타일 */
+  .slide-top {
+    animation: slide-top 0.8s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+  }
+  
+  @keyframes slide-top {
+    0% {
+      transform: translateY(50px);
+      opacity: 0;
+    }
+    100% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+
 </style>
 
 

@@ -20,7 +20,7 @@
                 <input
                 type="password"
                 id="password"
-                v-model="password"
+                v-model="password1"
                 placeholder="영문자, 숫자, 특수문자 조합 8~16자리"
                 required
                 />
@@ -29,7 +29,7 @@
                 <input
                 type="password"
                 id="confirm-password"
-                v-model="confirmPassword"
+                v-model="password2"
                 placeholder="비밀번호를 다시 입력하세요"
                 required
                 />
@@ -44,13 +44,7 @@
   
 
   <script>
-  import Footer from '@/components/layout/Footer.vue';
-  
-  export default {
-    components: {
-      Footer,
-    },
-  };
+
   </script>
   
 

@@ -1,10 +1,12 @@
 <template>
     <header class="site-header">
       <!-- 로고 -->
-      <div class="logo">
-        <img src="@/assets/images/home/logo.png" alt="사이트 로고" />
-        <span>이름 들어갈 곳</span>
-      </div>
+      <a href="/">
+        <div class="logo">
+          <img src="@/assets/images/home/logo.png" alt="사이트 로고" />
+          <span>이름 들어갈 곳</span>
+        </div>
+      </a>
   
       <!-- 네비게이션 메뉴 -->
       <nav class="nav-menu">
@@ -20,7 +22,7 @@
       <div class="user-menu">
         <a href="/login">로그인</a>
         <a href="/signup">회원가입</a>
-        <a href="#">마이페이지</a>
+        <a href="/mypage/:id">마이페이지</a>
 
       </div>
     </header>

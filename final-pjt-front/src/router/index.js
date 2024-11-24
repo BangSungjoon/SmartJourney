@@ -9,6 +9,8 @@ import QuestionPage from '@/components/pages/questions/QuestionPage.vue'
 import PortResults from '@/components/pages/questions/PortResults.vue'
 import MapView from '@/views/MapView.vue'
 import Recommend from '@/views/Recommend.vue'
+import MyPage from '@/views/MyPage.vue'
+import RecommendDetail from '@/components/RecommendDetail.vue'
 // import SaveRecommendView from '@/views/SaveRecommendView.vue'
 // import PortfolioListView from '@/views/PortfolioListView.vue'
 // import CurrencyExchangeView from '@/views/미리작업/CurrencyExchangeView.vue'
@@ -81,7 +83,13 @@ const router = createRouter({
       name: 'Recommend',
       component: Recommend
 
-    }
+    },
+    {
+      path: '/recommend/:id',
+      name: 'RecommendDetail',
+      component: RecommendDetail
+
+    },
     // {
     //   path: '/saveRecommend',
     //   name: 'saveRecommend',
@@ -92,6 +100,12 @@ const router = createRouter({
     //   name: 'mypage',
     //   component: MyPageView
     // },
+    {
+      path: '/mypage/:id',
+      name: 'mypage',
+      component: MyPage
+    },
+
     // {
     //   path: '/productDetail/:id',
     //   name: 'productDetail',

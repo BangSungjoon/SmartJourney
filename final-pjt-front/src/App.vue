@@ -2,7 +2,7 @@
   <div id="app">
     <Header />
     <router-view /> <!-- HomePage가 여기에 렌더링 -->
-    <Footer />
+    <!-- <Footer /> -->
   </div>
 </template>
 
