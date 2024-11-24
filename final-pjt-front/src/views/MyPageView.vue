@@ -1,41 +1,58 @@
 <template>
     <div>
         <p>{{ user.username }}의 마이페이지 입니다.</p>
+        <div class="row">
+            <div class="col-9">
+                <RouterView />
+            </div>
+            <div class="col-3">
+                <div>
+                    <RouterLink :to="{ name: 'mypage-cart' }">
+                        내가 찜한 예/적금 상품
+                    </RouterLink>
+                </div>
+                <div>
+                    <RouterLink :to="{ name: 'mypage-portlist' }">
+                        내 포트폴리오
+                    </RouterLink>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
 <script setup>
-import axios from 'axios'
+import { RouterLink, RouterView } from 'vue-router'
+import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
-import { onMounted, ref } from 'vue'
 import { useFinStore } from '@/stores/counter'
+import axios from 'axios'
+import { defineProps } from 'vue';
 
-const route = useRoute()
+const props = defineProps({
+  id: {
+    type: String,
+    required: true
+  }
+});
+
+console.log(`props.id는 ${props.id}`); // id 값이 정상적으로 전달됨
+
 const store = useFinStore()
-const token = store.token
-const headers = {
-    'Authorization': `Token ${token}`,
-};
-const user = ref('')
+const route = useRoute()
+const user = ref('') // 사용자 데이터를 저장할 변수
 
 onMounted(() => {
-    console.log(`params id는 ${route.params.id}`)
-	axios({
-		method: 'get',
-		url: `${store.API_URL}/accounts/user/`,
-        headers: headers
-	})
-		.then((res) => {
-			console.log(res.data.username)
-            user.value = res.data
-            console.log(user.value)
-            // portfolios.value = res.data
-            // console.log(portfolios.value)
-		})
-		.catch(err => console.log(err))
+    const token = localStorage.getItem('token');
+    if (token) {
+        axios.get('http://127.0.0.1:8000/accounts/user/', {
+            headers: { 'Authorization': `Token ${token}` }
+        })
+            .then((res) => {
+                user.value = res.data;
+                console.log(`userid는 ${user.value}`)
+            })
+            .catch((err) => console.log(err))
+    }
 })
 </script>
-
-<style lang="scss" scoped>
-
-</style>

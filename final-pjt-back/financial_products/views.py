@@ -391,7 +391,6 @@ def recommend_savings(request):
 
 
 # 예금 추천 상세
-
 @api_view(['get'])
 def recommend_deposit_datail(request):
     fincode = request.GET['fincode']
@@ -464,7 +463,7 @@ def change_money(request):
     api_key = settings.AUTH_KEY
     url = f'https://www.koreaexim.go.kr/site/program/financial/exchangeJSON?authkey={api_key}&data=AP01'
 
-    response = requests.get(url)
+    response = requests.get(url, verify=False)
     response.raise_for_status()  # HTTP 에러 발생 시 예외 처리
     data = response.json()  # JSON 응답 데이터를 Python 리스트로 변환
     if data:                # 데이터가 있을 때만 DB갱신 오늘 날짜 기준 오전 11시 이전엔 빈배열이 올 수 있음
@@ -485,6 +484,9 @@ def change_money(request):
                     cur_nm=cur_nm
                 ):
                     continue
+                # 동일한 cur_unit 데이터 삭제
+                ChangeMoney.objects.filter(cur_unit=cur_unit).delete()
+
                 # serializer 사용해서 데이터 저장
                 save_data = {
                     'cur_unit': cur_unit,
@@ -497,9 +499,6 @@ def change_money(request):
                 if serializer.is_valid(raise_exception=True):
                     serializer.save()
 
-    # serializer = ChangeMoneySerializer(many=True)
-    # return Response(serializer.data)
-
     return Response(data)
 
 # DB에 저장된 환률 정보를 반환하는 함수
@@ -509,3 +508,73 @@ def exchange(request):
     money = ChangeMoney.objects.all()
     serializer = ChangeMoneySerializer(money, many=True)
     return Response(serializer.data)
+
+
+# 포트폴리오를 삭제할 수 있는 DELETE 요청
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def delete_portfolio(request, portfolio_id):
+    try:
+        portfolio = FinancialProduct.objects.get(pk=portfolio_id)
+        if portfolio.answer.user != request.user:
+            return Response({"error": "권환이 없습니다."}, status=403)
+        portfolio.delete()
+        return Response({"message": "포트폴리오가 삭제되었습니다."}, status=200)
+    except FinancialProduct.DoesNotExist:
+        return Response({"error": "해당 포트폴리오를 찾을 수 없습니다."}, status=404)
+    
+from .serializers import FinancialProductSerializer
+
+@api_view(['GET'])
+def get_user_portfolios(request, user_id):
+    # 해당 user_id로 작성된 포트폴리오 가져오기
+    portfolios = FinancialProduct.objects.filter(answer__user__id=user_id)
+    serializer = FinancialProductSerializer(portfolios, many=True)
+    return Response(serializer.data)
+
+############### 보조금 찾기 ###############
+@api_view(['GET'])
+def subsidy_list_save(request):
+    api_key = settings.SUBSIDY_KEY
+    for page in range(1, 102):
+        url = f'https://api.odcloud.kr/api/gov24/v3/serviceList?page={page}&serviceKey={api_key}&perPage=100'
+        response = requests.get(url)
+        data = response.json()  # JSON 응답 데이터를 Python 리스트로 변환
+        # print(data['data'][0])
+        # for li in data['data']:
+
+    
+    # if data:                # 데이터가 있을 때만 DB갱신 오늘 날짜 기준 오전 11시 이전엔 빈배열이 올 수 있음
+    #     for li in data:
+    #         if li['result'] == 1:   # 조회 결과가 성공일때만 DB 갱신
+    #             cur_unit = li['cur_unit']
+    #             ttb = li['ttb']
+    #             tts = li['tts']
+    #             deal_bas_r = li['deal_bas_r']
+    #             cur_nm = li['cur_nm']
+
+    #             # 동일한 정보가 DB에 있다면, 넘어갑시다!
+    #             if ChangeMoney.objects.filter(
+    #                 cur_unit=cur_unit,
+    #                 ttb=ttb,
+    #                 tts=tts,
+    #                 deal_bas_r=deal_bas_r,
+    #                 cur_nm=cur_nm
+    #             ):
+    #                 continue
+    #             # 동일한 cur_unit 데이터 삭제
+    #             ChangeMoney.objects.filter(cur_unit=cur_unit).delete()
+
+    #             # serializer 사용해서 데이터 저장
+    #             save_data = {
+    #                 'cur_unit': cur_unit,
+    #                 'ttb': ttb,
+    #                 'tts': tts,
+    #                 'deal_bas_r': deal_bas_r,
+    #                 'cur_nm': cur_nm
+    #             }
+    #             serializer = ChangeMoneySerializer(data=save_data)
+    #             if serializer.is_valid(raise_exception=True):
+    #                 serializer.save()
+
+    return Response(data)
