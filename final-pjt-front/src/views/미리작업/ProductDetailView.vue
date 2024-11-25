@@ -1,54 +1,102 @@
 <template>
-    <div>
-        <h2>은행 정보</h2>
-        <ul>
-            <li v-for="(bank, index) in bankInfos" :key="index">
-                <div class="bank-header">
-                    <strong>{{ bank.kor_co_nm }}</strong>
-                    <button 
-                        @click="toggleFavorite(bank)" 
-                        :class="['favorite-btn', { 'is-favorite': isFavorite(bank) }]"
-                    >
-                        {{ isFavorite(bank) ? '찜 취소' : '찜하기' }}
-                    </button>
+    <div class="product-detail">
+        <div v-for="(bank, index) in bankInfos" :key="index" class="bank-info">
+            <!-- 헤더 섹션 -->
+            <div class="bank-header">
+                <h2 class="bank-name">{{ bank.kor_co_nm }}</h2>
+                <button 
+                    @click="toggleFavorite(bank)" 
+                    :class="['favorite-btn', { 'is-favorite': isFavorite(bank) }]"
+                >
+                    <span class="heart-icon">{{ isFavorite(bank) ? '♥' : '♡' }}</span>
+                    {{ isFavorite(bank) ? '찜 취소' : '찜하기' }}
+                </button>
+            </div>
+
+            <!-- 기본 정보 섹션 -->
+            <div class="basic-info">
+                <h3 class="product-name">{{ bank.fin_prdt_nm }}</h3>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="label">상품 코드</span>
+                        <span class="value">{{ bank.fin_prdt_cd }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">가입 대상</span>
+                        <span class="value">{{ bank.join_member }}</span>
+                    </div>
                 </div>
-                <p>상품명: {{ bank.fin_prdt_nm }}</p>
-                <p>상품 코드: {{ bank.fin_prdt_cd }}</p>
-                <p>가입 대상: {{ bank.join_member }}</p>
-                <p>우대 조건: {{ bank.spcl_cnd }}</p>
-                <p>기타 조건: {{ bank.etc_note }}</p>
+            </div>
 
-                <h3 v-if="bank.depositoptions_set && bank.depositoptions_set.length > 0">예금 옵션</h3>
-                <ul v-if="bank.depositoptions_set && bank.depositoptions_set.length > 0">
-                    <li v-for="(option, optIndex) in bank.depositoptions_set" :key="optIndex">
-                        <p>저축 기간: {{ option.save_trm }}개월</p>
-                        <p>기본 금리: {{ option.intr_rate }}%</p>
-                        <p>최고 우대 금리: {{ option.intr_rate2 }}%</p>
-                        <p>적립 유형: {{ option.rsrv_type_nm }}</p>
-                    </li>
-                </ul>
+            <!-- 우대 조건 섹션 -->
+            <div class="conditions-section">
+                <div class="condition-box">
+                    <h4>우대 조건</h4>
+                    <p>{{ bank.spcl_cnd || '해당사항 없음' }}</p>
+                </div>
+                <div class="condition-box">
+                    <h4>기타 조건</h4>
+                    <p>{{ bank.etc_note || '해당사항 없음' }}</p>
+                </div>
+            </div>
 
-                <h3 v-if="bank.savingoptions_set && bank.savingoptions_set.length > 0">적금 옵션</h3>
-                <ul v-if="bank.savingoptions_set && bank.savingoptions_set.length > 0">
-                    <li v-for="(option, optIndex) in bank.savingoptions_set" :key="optIndex">
-                        <p>저축 기간: {{ option.save_trm }}개월</p>
-                        <p>기본 금리: {{ option.intr_rate }}%</p>
-                        <p>최고 우대 금리: {{ option.intr_rate2 }}%</p>
-                        <p>적립 유형: {{ option.rsrv_type_nm }}</p>
-                    </li>
-                </ul>
-            </li>
-        </ul>
+            <!-- 예금 옵션 섹션 -->
+            <div v-if="bank.depositoptions_set?.length" class="options-section">
+                <h3 class="options-title">예금 옵션</h3>
+                <div class="options-grid">
+                    <div v-for="(option, optIndex) in bank.depositoptions_set" 
+                         :key="optIndex"
+                         class="option-card">
+                        <div class="option-header">저축 기간: {{ option.save_trm }}개월</div>
+                        <div class="rates">
+                            <div class="rate-item">
+                                <span class="rate-label">기본 금리</span>
+                                <span class="rate-value">{{ option.intr_rate }}%</span>
+                            </div>
+                            <div class="rate-item highlight">
+                                <span class="rate-label">최고 우대 금리</span>
+                                <span class="rate-value">{{ option.intr_rate2 }}%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 적금 옵션 섹션 -->
+            <div v-if="bank.savingoptions_set?.length" class="options-section">
+                <h3 class="options-title">적금 옵션</h3>
+                <div class="options-grid">
+                    <div v-for="(option, optIndex) in bank.savingoptions_set" 
+                         :key="optIndex"
+                         class="option-card">
+                        <div class="option-header">
+                            {{ option.rsrv_type_nm }} - {{ option.save_trm }}개월
+                        </div>
+                        <div class="rates">
+                            <div class="rate-item">
+                                <span class="rate-label">기본 금리</span>
+                                <span class="rate-value">{{ option.intr_rate }}%</span>
+                            </div>
+                            <div class="rate-item highlight">
+                                <span class="rate-label">최고 우대 금리</span>
+                                <span class="rate-value">{{ option.intr_rate2 }}%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
 <script setup>
-// defineProps(['id'])
-const props = defineProps(['id'])
-
 import axios from 'axios';
 import { useFinStore } from '@/stores/counter';
 import { onMounted, ref } from 'vue';
+// defineProps(['id'])
+const props = defineProps({
+  id: Number,
+});
 const store = useFinStore()
 const bankInfos = ref([])
 const ulElement = document.querySelector('#ul')
@@ -128,23 +176,184 @@ const toggleFavorite = async (bank) => {
 </script>
 
 <style scoped>
+.product-detail {
+    color: #333;
+    font-family: 'Noto Sans KR', sans-serif;
+}
+
+.bank-info {
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
 .bank-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 1rem;
+    padding: 20px;
+    background: #f8f9fa;
+    border-bottom: 1px solid #eee;
+}
+
+.bank-name {
+    font-size: 1.5rem;
+    margin: 0;
+    color: #2c3e50;
+    font-weight: 700;
 }
 
 .favorite-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
     padding: 8px 16px;
-    border: none;
-    border-radius: 4px;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    background: white;
     cursor: pointer;
-    background-color: #f0f0f0;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.favorite-btn:hover {
+    background: #f8f9fa;
 }
 
 .favorite-btn.is-favorite {
-    background-color: #4CAF50;
+    background: #ff6b6b;
     color: white;
+    border-color: #ff6b6b;
+}
+
+.heart-icon {
+    font-size: 1.2em;
+    line-height: 1;
+}
+
+.basic-info {
+    padding: 20px;
+    background: white;
+}
+
+.product-name {
+    font-size: 1.3rem;
+    color: #1a73e8;
+    margin: 0 0 20px 0;
+    font-weight: 500;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.label {
+    font-size: 0.9rem;
+    color: #666;
+    font-weight: 400;
+}
+
+.value {
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.conditions-section {
+    padding: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.condition-box {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.condition-box h4 {
+    margin: 0 0 10px 0;
+    color: #2c3e50;
+    font-weight: 500;
+}
+
+.condition-box p {
+    margin: 0;
+    line-height: 1.6;
+    color: #666;
+}
+
+.options-section {
+    padding: 20px;
+}
+
+.options-title {
+    margin: 0 0 20px 0;
+    color: #2c3e50;
+    font-size: 1.2rem;
+    font-weight: 500;
+}
+
+.options-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.option-card {
+    background: #f8f9fa;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.option-header {
+    background: #e9ecef;
+    padding: 12px;
+    font-weight: 500;
+    color: #495057;
+}
+
+.rates {
+    padding: 16px;
+}
+
+.rate-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+}
+
+.rate-item.highlight {
+    color: #1a73e8;
+    font-weight: 500;
+}
+
+.rate-label {
+    font-size: 0.9rem;
+}
+
+.rate-value {
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+/* 반응형 디자인을 위한 미디어 쿼리 */
+@media (max-width: 768px) {
+    .info-grid, .conditions-section {
+        grid-template-columns: 1fr;
+    }
+    
+    .options-grid {
+        grid-template-columns: 1fr;
+    }
 }
 </style>
