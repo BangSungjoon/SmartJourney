@@ -91,7 +91,7 @@ const createPortfolio = function () {
 const createAnswer = function () {
     const token = store.token // 실제 사용자 토큰 값으로 대체
     const headers = {
-    'Authorization': `Token ${token}`,
+        'Authorization': `Token ${token}`,
     };
     axios({
         method: 'post',
@@ -109,10 +109,12 @@ const createAnswer = function () {
     }).then((res) => {
         console.log('answer 저장 성공')
         console.log(store.currentUserId)
-        router.push({ name: 'portlist', params: { id: store.currentUserId } })
         const answerId = res.data.id
-        sendRatio(answerId) // 비율 저장
-    }).catch(err => console.log(err))
+        sendRatio(answerId)
+    }).catch(err => {
+        console.error('답변 저장 실패:', err)
+        alert('답변 저장에 실패했습니다. 다시 시도해주세요.')
+    })
 }
 
 // 비율 저장하는 함수
@@ -141,7 +143,7 @@ const sendRatio = function (answerId) {
     const inst_save_score = port_save_return.inst_save_score
 
     const headers = {
-    'Authorization': `Token ${token}`,
+        'Authorization': `Token ${token}`,
     };
 
     axios({
@@ -166,9 +168,13 @@ const sendRatio = function (answerId) {
         headers: headers // 헤더 추가
     }).then(() => {
         console.log('ratio 저장 성공')
-        router.push({ name: 'portresult' })
+        router.push({
+            name: 'portresult',
+            params: { answerId: answerId }
+        })
     }).catch(err => {
-        console.log(err)
+        console.error('비율 저장 실패:', err)
+        alert('포트폴리오 생성에 실패했습니다. 다시 시도해주세요.')
     })
 }
 

@@ -934,4 +934,14 @@ def toggle_product_like(request, product_type, product_id):
     except (DepositProducts.DoesNotExist, SavingProducts.DoesNotExist):
         return Response({'error': '상품을 찾을 수 없습니다.'}, status=404)
     
+@api_view(['get'])
+@permission_classes([IsAuthenticated])
+def get_ratio(request, answer_id):
+    try:
+        financial_product = FinancialProduct.objects.get(answer_id=answer_id)
+        serializer = SaveInvRatioSerializer(financial_product)
+        return Response(serializer.data)
+    except FinancialProduct.DoesNotExist:
+        return Response({"detail": "Portfolio not found"}, status=404)
+    
     

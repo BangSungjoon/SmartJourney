@@ -131,5 +131,41 @@ export const useFinStore = defineStore('finance', () => {
         return savingFavorites.value.includes(productId);
     }
 
-    return { signUp, API_URL, logIn, logOut, token, isLoggedIn, currentUserId, toggleDepositFavorite, toggleSavingFavorite, isDepositFavorite, isSavingFavorite, depositFavorites, savingFavorites }
+    // 포트폴리오 결과 관련 함수 추가
+    const savePortfolioResult = async (answerId, ratioData) => {
+        try {
+            const response = await axios({
+                method: 'post',
+                url: `${API_URL}/financial_products/save_ratio/${answerId}/`,
+                data: ratioData,
+                headers: {
+                    'Authorization': `Token ${token.value}`
+                }
+            })
+            console.log('포트폴리오 결과 저장 성공:', response.data)
+            return response.data
+        } catch (error) {
+            console.error('포트폴리오 결과 저장 실패:', error)
+            throw error
+        }
+    }
+
+    const getPortfolioResult = async (answerId) => {
+        try {
+            const response = await axios({
+                method: 'get',
+                url: `${API_URL}/financial_products/get_ratio/${answerId}/`,
+                headers: {
+                    'Authorization': `Token ${token.value}`
+                }
+            })
+            console.log('포트폴리오 결과 조회 성공:', response.data)
+            return response.data
+        } catch (error) {
+            console.error('포트폴리오 결과 조회 실패:', error)
+            throw error
+        }
+    }
+
+    return { signUp, API_URL, logIn, logOut, token, isLoggedIn, currentUserId, toggleDepositFavorite, toggleSavingFavorite, isDepositFavorite, isSavingFavorite, depositFavorites, savingFavorites, savePortfolioResult, getPortfolioResult }
 }, { persist: true })

@@ -1,4 +1,3 @@
-
 <template>
   <div class="question-container">
     <!-- 질문 표시 -->
@@ -53,7 +52,7 @@
   
   <script setup>
 import axios from 'axios'
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { useFinStore } from '@/stores/counter';
 // import PortResults from './PortResults.vue';
@@ -74,164 +73,167 @@ const questions = [
   { id: 7, text: '가계 상황은 어떠신가요?', inputType: 'select', options: ['외벌이, 피부양자 있음', '외벌이, 피부양자 없음', '맞벌이, 피부양자 있음', '맞벌이, 피부양자 없음'] },
 ];
 
-// 현재 질문 상태
-const currentQuestionIndex = computed(() => parseInt(route.params.id) - 1);
+// 현재 질문 인덱스를 ref로 관리
+const currentQuestionIndex = ref(parseInt(route.params.id) - 1);
+
+// 답변 저장 및 다음 질문으로 이동
+const saveAnswerAndNext = async () => {
+  try {
+    // 현재 답변 저장
+    result.value.push({
+      questionId: currentQuestion.value.id,
+      answer: answer.value
+    });
+
+    // 디버깅을 위한 로그
+    console.log('Current index:', currentQuestionIndex.value);
+    console.log('Questions length:', questions.length);
+    console.log('Current answer:', answer.value);
+
+    if (currentQuestionIndex.value < questions.length - 1) {
+      // 다음 질문으로 이동
+      const nextIndex = currentQuestionIndex.value + 1;
+      console.log('Moving to question:', nextIndex + 1);
+      
+      await router.push({
+        name: 'QuestionPage',
+        params: { id: (nextIndex + 1).toString() }
+      });
+      
+      // 답변 초기화
+      answer.value = '';
+      currentQuestionIndex.value = nextIndex;
+    } else {
+      // 마지막 질문일 경우
+      console.log('Saving final answer...');
+      await saveAnswer();
+    }
+  } catch (error) {
+    console.error('Navigation error:', error);
+  }
+};
+
+// 옵션 선택 처리
+const handleOptionSelect = (option) => {
+  answer.value = option;
+  saveAnswerAndNext();
+};
+
+// saveAnswer 함수 수정
+const saveAnswer = async () => {
+  try {
+    const requestData = {
+      q1_expected_goal_amount: result.value[4].answer,
+      q2_goal_duration: result.value[0].answer,
+      q3_income_source: result.value[5].answer,
+      q4_emergency_fund_status: result.value[2].answer,
+      q5_investment_priority: result.value[1].answer,
+      q6_safety_or_liquidity: result.value[3].answer,
+      q7_household_status: result.value[6].answer,
+    };
+
+    const response = await axios({
+      method: 'post',
+      url: `${store.API_URL}/financial_products/save_answer/`,
+      data: requestData,
+      headers: {
+        'Authorization': `Token ${store.token}`
+      }
+    });
+
+    console.log('Answer saved successfully:', response.data);
+    const answerId = response.data.id;
+    await sendRatio(answerId, requestData);  // requestData 전달
+  } catch (error) {
+    console.error('Error saving answer:', error);
+    throw error;
+  }
+};
+
+// 현재 질문 computed 속성
 const currentQuestion = computed(() => questions[currentQuestionIndex.value]);
 
 // 사용자의 응답 데이터
 const answer = ref('');
 const result = ref([]); // 모든 응답 데이터를 저장하는 배열
 
-// 옵션 선택 처리
-const handleOptionSelect = (option) => {
-  answer.value = option; // 선택한 옵션 저장
-  saveAnswerAndNext(); // 답변 저장 및 다음 질문 이동
-};
-
-// 답변 저장 및 다음 질문으로 이동
-const saveAnswerAndNext = (ratioData) => {
-  // 현재 질문이 숫자를 요구하는 경우 정수로 변환
-  if (currentQuestion.value.inputType === 'number') {
-    answer.value = parseInt(answer.value, 10);
-
-    // 숫자 변환 실패 시 처리
-    if (isNaN(answer.value)) {
-      console.error('유효한 정수를 입력해주세요.');
-      return;
-    }
-  }
-  // 현재 답변 저장
-  result.value[currentQuestionIndex.value] = {
-    questionId: currentQuestion.value.id,
-    answer: answer.value,
-  };
-
-  // 다음 질문으로 이동
-  const nextIndex = currentQuestionIndex.value + 1;
-  if (nextIndex < questions.length) {
-    router.push({ params: { id: nextIndex + 1 } }); // 다음 질문으로 이동
-  } else {
-    saveAnswer(); // 설문조사 완료 시 데이터 제출
-    // 모든 질문 완료 시 결과 페이지로 이동
-    // router.push('/results');
-
-    router.push({
-      name: 'Results',
-      query: { resultData: JSON.stringify(ratioData) }
-    });
-    console.log('전달할 데이터:', ratioData);
-    console.log('라우터 이동:', {
-      name: 'Results',
-      params: { resultData: ratioData },
-});
-  }
-
-  // 현재 답변 초기화
-  answer.value = '';
-};
-
-  // 옵션 선택 처리
-  const saveAnswer = function () {
-    console.log(result.value[0].answer)
-    const token = store.token // 실제 사용자 토큰 값으로 대체
-    const headers = {
-    'Authorization': `Token ${token}`,
-    };
-    const requestData = {
-      q1_expected_goal_amount: result.value[4].answer, // 예상금액
-      q2_goal_duration: result.value[0].answer, // 달성 기간
-      q3_income_source: result.value[5].answer, // 소득 경로
-      q4_emergency_fund_status: result.value[2].answer, // 비상금
-      q5_investment_priority: result.value[1].answer, // 투자할 때 중요하게 여기는 것
-      q6_safety_or_liquidity: result.value[3].answer, // 안전성과 유동성
-      q7_household_status: result.value[6].answer, // 가계 상황
-    }
-    axios({
-        method: 'post',
-        url: `${store.API_URL}/financial_products/save_answer/`,
-        data: requestData,
-        headers: headers // 헤더 추가
-    }).then((res) => {
-        console.log('answer 저장 성공')
-        console.log(store.currentUserId)
-        // router.push({ name: 'portlist', params: { id: store.currentUserId } })
-        const answerId = res.data.id
-        sendRatio(answerId, requestData)
-    }).catch((error) => {
-    if (error.response) {
-      console.error('응답 데이터:', error.response.data);
-      console.error('응답 상태 코드:', error.response.status);
-    } else {
-      console.error('요청 실패:', error.message);
-    }
-  });
-  }
-  // 진행률 계산
-  const progressPercentage = computed(() =>
-    ((currentQuestionIndex.value + 1) / questions.length) * 100
-  );
+// 진행률 계산
+const progressPercentage = computed(() =>
+  ((currentQuestionIndex.value + 1) / questions.length) * 100
+);
 
 let ratioData;
-  // 비율 저장하는 함수
-const sendRatio = function (answerId, requestData) {
-    const token = store.token // 실제 사용자 토큰 값으로 대체
+// 비율 저장하는 함수
+const sendRatio = async (answerId, requestData) => {
+    try {
+        const risk_port_return = riskPort(requestData)
+        const save_inv_return = SaveInvTypeFunc(requestData)
+        const port_inv_return = PortInvType(requestData)
+        const port_save_return = PortSaveType(requestData)
 
-    const risk_port_return = riskPort(requestData) // 투자vs저축 return값
-    const risk_low = risk_port_return.risk_low
-    const risk_m_low = risk_port_return.risk_m_low
-    const risk_m = risk_port_return.risk_m
-    const risk_m_high = risk_port_return.risk_m_high
-    const risk_high = risk_port_return.risk_high
-
-    const save_inv_return = SaveInvTypeFunc(requestData) // 투자vs저축 return값
-    const saving_score = save_inv_return.saving_score
-    const inv_score = save_inv_return.inv_score
-
-    const port_inv_return = PortInvType(requestData) // 투자 내 상품비율 return 값
-    const dom_stock_score = port_inv_return.dom_stock_score
-    const int_stock_score = port_inv_return.int_stock_score
-    const bond_score = port_inv_return.bond_score
-    const alt_invest_score = port_inv_return.alt_invest_score
-    
-    const port_save_return = PortSaveType(requestData) // 저축 내 상품비율 return 값
-    const reg_save_score = port_save_return.reg_save_score
-    const inst_save_score = port_save_return.inst_save_score
-
-    const headers = {
-    'Authorization': `Token ${token}`,
-    };
-    ratioData = {
+        const ratioData = {
             answer: answerId,
-            low_ratio:risk_low,
-            med_low_ratio:risk_m_low,
-            med_ratio:risk_m,
-            med_high_ratio:risk_m_high,
-            high_ratio:risk_high,
-            saving_ratio: saving_score,
-            inv_ratio: inv_score,
-            dom_stock_ratio: dom_stock_score,
-            int_stock_ratio: int_stock_score,
-            bond_ratio: bond_score,
-            alt_invest_ratio: alt_invest_score,
-            inst_save_ratio: inst_save_score,
-            reg_save_ratio: reg_save_score,
+            low_ratio: risk_port_return.risk_low,
+            med_low_ratio: risk_port_return.risk_m_low,
+            med_ratio: risk_port_return.risk_m,
+            med_high_ratio: risk_port_return.risk_m_high,
+            high_ratio: risk_port_return.risk_high,
+            saving_ratio: save_inv_return.saving_score,
+            inv_ratio: save_inv_return.inv_score,
+            dom_stock_ratio: port_inv_return.dom_stock_score,
+            int_stock_ratio: port_inv_return.int_stock_score,
+            bond_ratio: port_inv_return.bond_score,
+            alt_invest_ratio: port_inv_return.alt_invest_score,
+            inst_save_ratio: port_save_return.inst_save_score,
+            reg_save_ratio: port_save_return.reg_save_score,
         }
 
-    axios({
-        method: 'post',
-        url: `${store.API_URL}/financial_products/save_ratio/${answerId}/`,
-        data: ratioData,
-        headers: headers // 헤더 추가
-    }).then(() => {
-        console.log('ratio 저장 성공')
-        // router.push({ name: 'portresult' })
-    }).catch(err => {
-        console.log(err)
-    })
+        const response = await store.savePortfolioResult(answerId, ratioData)
+        
+        // 결과 페이지로 이동
+        router.push({
+            name: 'portresult',
+            params: { 
+                answerId: answerId.toString()
+            }
+        })
+    } catch (error) {
+        console.error('Error saving ratio:', error)
+        throw error
+    }
+}
+
+// store의 savePortfolioResult 함수도 수정
+const savePortfolioResult = async (answerId, ratioData) => {
+    try {
+        const response = await axios({
+            method: 'post',
+            url: `${API_URL}/financial_products/save_ratio/${answerId}/`,
+            data: ratioData,
+            headers: {
+                'Authorization': `Token ${token.value}`,
+                'Content-Type': 'application/json'
+            }
+        })
+        console.log('포트폴리오 결과 장 성공:', response.data)
+        return response.data
+    } catch (error) {
+        console.error('포트폴리오 결과 저장 실패:', error)
+        if (error.response) {
+            console.error('Server error details:', error.response.data)
+        }
+        throw error
+    }
 }
 
 const riskPort = function (requestData) {
-    const term = requestData.q2_goal_duration;
+    let risk_low = 0
+    let risk_m_low = 0
+    let risk_m = 0
+    let risk_m_high = 0
+    let risk_high = 0
+    
+    const term = requestData.q2_goal_duration
     const important = requestData.q5_investment_priority
     const emerMoney = requestData.q4_emergency_fund_status
     const safeUtility = requestData.q6_safety_or_liquidity
@@ -239,11 +241,6 @@ const riskPort = function (requestData) {
     const job = requestData.q3_income_source
     const family = requestData.q7_household_status
     console.log(term)
-    let risk_low = 0      // 저위험
-    let risk_m_low = 0    // 중저위험
-    let risk_m = 0        // 중위험
-    let risk_m_high = 0   // 중고위험
-    let risk_high = 0     // 고위험
     // 목표 기간 - 가중치 0.4
     if (term <= 1) {
         risk_low += 0.4*80
@@ -653,6 +650,14 @@ const PortSaveType = function (requestData) {
 
         return{reg_save_score, inst_save_score}
 }
+
+// watch를 추가하여 route params 변경 감지
+watch(
+  () => route.params.id,
+  (newId) => {
+    currentQuestionIndex.value = parseInt(newId) - 1;
+  }
+);
 
   </script>
   

@@ -67,8 +67,8 @@ const router = createRouter({
       props: true 
     },
     {
-      path: '/results',
-      name: 'Results',
+      path: '/portfolio/result/:answerId?',
+      name: 'portresult',
       component: PortResults,
       props: true
     },
