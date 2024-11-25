@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from 'vue-router'
-// import MapView from '@/views/MapView.vue'
 import HomeView from '@/views/HomeView.vue'
 // import PortfolioView from '@/views/PortfolioView.vue'
 import SignUpView from '@/views/SignUpView.vue'
@@ -15,7 +14,7 @@ import RecommendDetail from '@/components/RecommendDetail.vue'
 // import PortfolioListView from '@/views/PortfolioListView.vue'
 // import CurrencyExchangeView from '@/views/미리작업/CurrencyExchangeView.vue'
 // import MyPageView from '@/views/MyPageView.vue'
-// import MyPageCartView from '@/views/MyPageCartView.vue'
+import MyPageCartView from '@/views/MyPageCartView.vue'
 import ProductDetailView from '@/views/미리작업/ProductDetailView.vue'
 import SubsidyView from '@/views/SubsidyView.vue'
 const router = createRouter({
@@ -100,16 +99,16 @@ const router = createRouter({
       component: MyPage,
       props: true, // props로 id 값을 전달
       children: [
-        // {
-        //   path: '', // 기본 경로를 빈 문자열로 설정
-        //   redirect: 'cart', // 기본적으로 cart로 리다이렉트
-        // },
-        // {
-        //   path: 'cart',
-        //   name: 'mypage-cart',
-        //   component: MyPageCartView,
-        //   props: true, // id 값을 전달
-        // },
+        {
+          path: '', // 기본 경로를 빈 문자열로 설정
+          redirect: 'cart', // 기본적으로 cart로 리다이렉트
+        },
+        {
+          path: 'cart',
+          name: 'mypage-cart',
+          component: MyPageCartView,
+          props: true, // id 값을 전달
+        },
         // {
           // path: 'portfolio',
           // name: 'mypage-portlist',

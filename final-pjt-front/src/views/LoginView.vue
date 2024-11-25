@@ -6,7 +6,7 @@
           <h1 class="login-title">로그인</h1>
   
           <!-- 로그인 입력 -->
-          <form @submit.prevent="handleLogin" class="login-form">
+          <form @submit.prevent="logIn" class="login-form">
             <label for="username">아이디*</label>
             <input
               type="text"
@@ -42,7 +42,20 @@
   </template>
 
 <script setup>
+import { ref } from 'vue'
+import { useFinStore } from '@/stores/counter';
 
+const username = ref(null)
+const password = ref(null)
+const store = useFinStore()
+
+const logIn = function () {
+    const payload = {
+        username: username.value,
+        password: password.value
+    }
+    store.logIn(payload)
+}
 </script>
 
 <style scoped>
