@@ -200,10 +200,35 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useFinStore } from '@/stores/counter'
 import axios from 'axios'
 import MySubsidy from '@/components/MySubsidy.vue'
+onMounted(() => {
+  Promise.all([
+        axios({
+            method:'get',
+            url:`${store.API_URL}/financial_products/subsidy_list_save/`,
+        }),
+        axios({
+            method:'get',
+            url:`${store.API_URL}/financial_products/subsidy_detail_save/`,          
+        }),
+        axios({
+            method:'get',
+            url:`${store.API_URL}/financial_products/support_conditions_save/`,
+        }),
+    ])
+    .then(res=>{
+      console.log('성공')
+    })
+    .catch(err => {
+      console.log(err)
+    })
+});
+
+
+
 
 const store = useFinStore()
 const currentStep = ref(1)

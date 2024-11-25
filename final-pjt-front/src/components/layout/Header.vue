@@ -13,11 +13,13 @@
       <!-- 네비게이션 메뉴 -->
       <nav class="nav-menu">
         <ul>
-          <li><RouterLink :to="{ name: 'home' }">메인</RouterLink></li>
+          <!-- <li><RouterLink :to="{ name: 'home' }">메인</RouterLink></li> -->
           <!-- <li><a href="/portfolio_main">포트폴리오</a></li> -->
           <li><RouterLink :to="{ name:'portfolio_main' }">포트폴리오</RouterLink></li>
           <li><RouterLink :to="{ name:'map' }">내 주변 은행 찾기</RouterLink></li>
           <li><RouterLink :to="{ name:'Recommend' }">예금 적금 추천</RouterLink></li>
+          <li><RouterLink :to="{ name:'subsidy' }">보조금 찾기</RouterLink></li>
+
         </ul>
       </nav>
   
