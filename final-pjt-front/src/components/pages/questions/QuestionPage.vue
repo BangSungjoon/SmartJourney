@@ -17,7 +17,7 @@
       <button
         class="next-button"
         :disabled="!answer"
-        @click="handleNext"
+        @click="saveAnswerAndNext"
       >
         Next
       </button>
@@ -52,52 +52,102 @@
 </template>
   
   <script setup>
-  import { ref, computed } from 'vue';
-  import { useRouter, useRoute } from 'vue-router';
-  
-  // Router 사용
-  const router = useRouter();
-  const route = useRoute();
-  
-  // 질문 데이터
-  const questions = [
-    { id: 1, text: '목표를 언제까지 달성하고 싶으신가요?', inputType: 'number' },
-    { id: 2, text: '투자할 때 더 중요하게 여기는 것은 무엇인가요?', inputType: 'select', options: ['손실 최소화', '균형', '수익 극대화'] },
-    { id: 3, text: '비상 자금이 마련되어 있나요?', inputType: 'select', options: ['없음', '약간 있음(3~6개월 생활비 마련)', '충분함(6개월 이상 생활비 마련)'] },
-    { id: 4, text: '안정성과 유동성 중 더 중요하게 여기는 것은 무엇인가요?', inputType: 'select', options: ['안정성', '균형', '유동성'] },
-    { id: 5, text: '목표 금액이 얼마인가요? (단위: 만원)', inputType: 'number' },
-    { id: 6, text: '현재 소득은 어떻게 얻고 계신가요?', inputType: 'select', options: ['정규직', '계약직/프리랜서', '투자 소득', '무직'] },
-    { id: 7, text: '가계 상황은 어떠신가요?', inputType: 'select', options: ['외벌이, 피부양자 있음', '외벌이, 피부양자 없음', '맞벌이, 피부양자 있음', '맞벌이, 피부양자 없음'] },
-  ];
-  
-  // 현재 질문 상태
-  const currentQuestionIndex = computed(() => parseInt(route.params.id) - 1);
-  const currentQuestion = computed(() => questions[currentQuestionIndex.value]);
-  
-  // 사용자의 응답 데이터
-  const answer = ref('');
+import axios from 'axios'
+import { ref, computed } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
+import { useFinStore } from '@/stores/counter';
 
-  // 옵션 선택 처리
-  const handleOptionSelect = (option) => {
+const store = useFinStore()
+// Router 사용
+const router = useRouter();
+const route = useRoute();
+
+// 질문 데이터
+const questions = [
+  { id: 1, text: '목표를 언제까지 달성하고 싶으신가요? (단위: 년 후)', inputType: 'number' },
+  { id: 2, text: '투자할 때 더 중요하게 여기는 것은 무엇인가요?', inputType: 'select', options: ['손실 최소화', '균형', '수익 극대화'] },
+  { id: 3, text: '비상 자금이 마련되어 있나요?', inputType: 'select', options: ['없음', '약간 있음(3~6개월 생활비 마련)', '충분함(6개월 이상 생활비 마련)'] },
+  { id: 4, text: '안정성과 유동성 중 더 중요하게 여기는 것은 무엇인가요?', inputType: 'select', options: ['안정성', '균형', '유동성'] },
+  { id: 5, text: '목표 금액이 얼마인가요? (단위: 만원)', inputType: 'number' },
+  { id: 6, text: '현재 소득은 어떻게 얻고 계신가요?', inputType: 'select', options: ['정규직', '계약직/프리랜서', '투자 소득', '무직'] },
+  { id: 7, text: '가계 상황은 어떠신가요?', inputType: 'select', options: ['외벌이, 피부양자 있음', '외벌이, 피부양자 없음', '맞벌이, 피부양자 있음', '맞벌이, 피부양자 없음'] },
+];
+
+// 현재 질문 상태
+const currentQuestionIndex = computed(() => parseInt(route.params.id) - 1);
+const currentQuestion = computed(() => questions[currentQuestionIndex.value]);
+
+// 사용자의 응답 데이터
+const answer = ref('');
+const result = ref([]); // 모든 응답 데이터를 저장하는 배열
+
+// 옵션 선택 처리
+const handleOptionSelect = (option) => {
   answer.value = option; // 선택한 옵션 저장
-  handleNext(); // 다음 질문으로 이동
+  saveAnswerAndNext(); // 답변 저장 및 다음 질문 이동
+};
+
+// 답변 저장 및 다음 질문으로 이동
+const saveAnswerAndNext = () => {
+  // 현재 답변 저장
+  result.value[currentQuestionIndex.value] = {
+    questionId: currentQuestion.value.id,
+    answer: answer.value,
   };
-  
-  
-  // 다음 질문 이동 함수
-  const handleNext = () => {
-    if (currentQuestionIndex.value < questions.length - 1) {
-      router.push(`/question/${currentQuestionIndex.value + 2}`);
-    } else {
-      // 모든 질문 완료 시 결과 페이지로 이동
-      router.push('/results');
-    }
-  };
+
+  // 다음 질문으로 이동
+  const nextIndex = currentQuestionIndex.value + 1;
+  if (nextIndex < questions.length) {
+    router.push({ params: { id: nextIndex + 1 } }); // 다음 질문으로 이동
+  } else {
+    saveAnswer(); // 설문조사 완료 시 데이터 제출
+  }
+
+  // 현재 답변 초기화
+  answer.value = '';
+};
+
+// // 설문조사 데이터 제출
+// const submitSurvey = () => {
+//   console.log('최종 응답 데이터:', result.value);
+//   console.log(result.value[1].answer)
+
+// };
+
+
+  // 옵션 선택 처리(승주)
+  const saveAnswer = function () {
+    const token = store.token // 실제 사용자 토큰 값으로 대체
+    const headers = {
+    'Authorization': `Token ${token}`,
+    };
+    axios({
+        method: 'post',
+        url: `${store.API_URL}/financial_products/save_answer/`,
+        data: {
+            q1_expected_goal_amount: result.value[0].answer,
+            q2_goal_duration: result.value[1].answer,
+            q3_income_source: result.value[2].answer,
+            q4_emergency_fund_status: result.value[3].answer,
+            q5_investment_priority: result.value[4].answer,
+            q6_safety_or_liquidity: result.value[5].answer,
+            q7_household_status: result.value[6].answer,
+        },
+        headers: headers // 헤더 추가
+    }).then((res) => {
+        console.log('answer 저장 성공')
+        console.log(store.currentUserId)
+        router.push({ name: 'portlist', params: { id: store.currentUserId } })
+        const answerId = res.data.id
+        sendRatio(answerId)
+    }).catch(err => console.log(err))
+  }
   
   // 진행률 계산
   const progressPercentage = computed(() =>
     ((currentQuestionIndex.value + 1) / questions.length) * 100
   );
+
   </script>
   
   <style scoped>
