@@ -66,10 +66,11 @@ const router = createRouter({
       component: QuestionPage, 
       props: true 
     },
-    { 
-      path: '/results', 
-      name: 'Results', 
-      component: PortResults 
+    {
+      path: '/results',
+      name: 'Results',
+      component: PortResults,
+      props: true
     },
     {
       path: '/recommend',

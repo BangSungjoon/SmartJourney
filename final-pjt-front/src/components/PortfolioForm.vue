@@ -111,9 +111,10 @@ const createAnswer = function () {
         console.log(store.currentUserId)
         router.push({ name: 'portlist', params: { id: store.currentUserId } })
         const answerId = res.data.id
-        sendRatio(answerId)
+        sendRatio(answerId) // 비율 저장
     }).catch(err => console.log(err))
 }
+
 // 비율 저장하는 함수
 const sendRatio = function (answerId) {
     const token = store.token // 실제 사용자 토큰 값으로 대체
