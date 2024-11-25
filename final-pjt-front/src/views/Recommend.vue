@@ -143,7 +143,6 @@ import axios from "axios";
 import { ref, onMounted, onUnmounted } from "vue";
 import { useFinStore } from "@/stores/counter";
 // 모달 관련 추가
-import Modal from "@/components/Modal.vue";  // 컴포넌트용 Modal
 import ProductDetailView from "@/views/미리작업/ProductDetailView.vue";
 
 const isModalOpen = ref(false);
@@ -494,6 +493,7 @@ onUnmounted(() => {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  font-family: 'Noto Sans KR', sans-serif;
 }
 
 .close-btn {

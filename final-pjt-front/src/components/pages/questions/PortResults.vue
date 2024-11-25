@@ -23,11 +23,46 @@
       </div>
 
       <div class="position-relative" v-if="resultData">
-        <PortChart
-          class="" 
-          :portfolio="resultData" 
-          :selectedType="selectedCriteria"
-        />
+        <!-- 위험도 차트 -->
+        <div v-if="selectedCriteria === '위험도'" class="single-chart position-absolute top-50 start-50 translate-middle">
+          <PortChart
+            class="chart-container" 
+            :portfolio="resultData" 
+            :selectedType="selectedCriteria"
+          />
+        </div>
+
+        <!-- 자산유형 차트 캐러셀 -->
+        <div v-else class="carousel-wrapper">
+          <div class="carousel">
+            <button class="carousel-button prev" @click="prevSlide" v-show="currentSlide > 0">&lt;</button>
+            
+            <div class="carousel-container">
+              <div class="carousel-slide" :style="{ transform: `translateX(-${currentSlide * 100}%)` }">
+                <div v-for="index in 3" :key="index" class="slide">
+                  <PortChart
+                    class="chart-container" 
+                    :portfolio="resultData" 
+                    :selectedType="selectedCriteria"
+                    :chartIndex="index - 1"
+                  />
+                </div>
+              </div>
+            </div>
+            
+            <button class="carousel-button next" @click="nextSlide" v-show="currentSlide < 2">&gt;</button>
+          </div>
+          
+          <!-- 슬라이드 인디케이터 추가 -->
+          <div class="carousel-indicators">
+            <span 
+              v-for="index in 3" 
+              :key="index"
+              :class="['indicator', { active: currentSlide === index - 1 }]"
+              @click="currentSlide = index - 1"
+            ></span>
+          </div>
+        </div>
       </div>
       <div v-else>
         <p>데이터를 불러오는 중...</p>
@@ -42,7 +77,7 @@
 
 <script setup>
 import PortChart from './PortChart.vue';
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { useFinStore } from '@/stores/counter';
 
@@ -50,6 +85,7 @@ const store = useFinStore();
 const route = useRoute();
 const resultData = ref(null);
 const selectedCriteria = ref("위험도");
+const currentSlide = ref(0);
 
 onMounted(async () => {
     try {
@@ -69,6 +105,23 @@ const applyFilters = () => {
 const sharePortfolio = () => {
     // 공유 기능 구현
     console.log('공유하기 클릭');
+};
+
+// 선택 기준이 변경될 때 슬라이드 초기화
+watch(selectedCriteria, () => {
+  currentSlide.value = 0;
+});
+
+const nextSlide = () => {
+  if (currentSlide.value < 2) {
+    currentSlide.value++;
+  }
+};
+
+const prevSlide = () => {
+  if (currentSlide.value > 0) {
+    currentSlide.value--;
+  }
 };
 </script>
 
@@ -266,6 +319,115 @@ const sharePortfolio = () => {
 .triangle-layout .small-circle:nth-child(3) {
   bottom: 0;
   right: 0;
+}
+
+/* 차트 컨테이너 공통 스타일 */
+.chart-container {
+  width: 60%;  /* 차트 크기를 더 작게 조정 */
+  margin: 0 auto;
+  background: transparent;
+}
+
+/* 단일 차트 컨테이너 */
+.single-chart {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 캐러셀 스타일 */
+.carousel-wrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.carousel {
+  width: 100%;
+  height: 600px;  /* 고정 높이 설정 */
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.carousel-container {
+  width: 600px;  /* 고정 너비 설정 */
+  height: 600px;  /* 고정 높이 설정 */
+  overflow: hidden;
+}
+
+.carousel-slide {
+  display: flex;
+  transition: transform 0.5s ease;
+  height: 100%;
+}
+
+.slide {
+  min-width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.carousel-button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.3);
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: white;
+  font-size: 20px;
+  z-index: 1;
+}
+
+.carousel-button.prev {
+  left: 50px;
+}
+
+.carousel-button.next {
+  right: 50px;
+}
+
+/* 슬라이드 인디케이터 스타일 */
+.carousel-indicators {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.indicator {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.indicator.active {
+  background: rgba(255, 255, 255, 0.8);
+}
+
+/* 차트 컨테이너 스타일 수정 */
+.chart-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>
 

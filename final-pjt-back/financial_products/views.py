@@ -394,7 +394,7 @@ def recommend_savings(request):
 
 # 예금 추천 상세
 @api_view(['get'])
-def recommend_deposit_datail(request):
+def recommend_deposit_detail(request):
     fincode = request.GET['fincode']
     products = DepositProducts.objects.filter(fin_prdt_cd=fincode).prefetch_related('depositoptions_set').all()
     if products:

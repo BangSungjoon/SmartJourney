@@ -11,7 +11,7 @@ import Recommend from '@/views/Recommend.vue'
 import MyPage from '@/views/MyPage.vue'
 import RecommendDetail from '@/components/RecommendDetail.vue'
 // import SaveRecommendView from '@/views/SaveRecommendView.vue'
-// import PortfolioListView from '@/views/PortfolioListView.vue'
+import PortfolioListView from '@/views/미리작업/PortfolioListView.vue'
 // import CurrencyExchangeView from '@/views/미리작업/CurrencyExchangeView.vue'
 // import MyPageView from '@/views/MyPageView.vue'
 import MyPageCartView from '@/views/MyPageCartView.vue'
@@ -60,11 +60,11 @@ const router = createRouter({
       name: 'portfolio_main',
       component: PortfolioMain
     },
-    { 
-      path: '/question/:id', 
-      name: 'QuestionPage', 
-      component: QuestionPage, 
-      props: true 
+    {
+      path: '/question/:id',
+      name: 'QuestionPage',
+      component: QuestionPage,
+      props: true
     },
     {
       path: '/portfolio/result/:answerId?',
@@ -110,12 +110,12 @@ const router = createRouter({
           component: MyPageCartView,
           props: true, // id 값을 전달
         },
-        // {
-          // path: 'portfolio',
-          // name: 'mypage-portlist',
-          // component: PortfolioListView,
-          // props: true, // id 값을 전달
-        // },
+        {
+          path: 'portfolio',
+          name: 'mypage-portlist',
+          component: PortfolioListView,
+          props: true, // id 값을 전달
+        },
         {
           path: 'subsidy',
           name: 'mypage-subsidy',

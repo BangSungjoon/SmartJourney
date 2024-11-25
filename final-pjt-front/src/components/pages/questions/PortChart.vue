@@ -1,12 +1,22 @@
 <template>
     <div class="chart-container">
-        <div v-if="selectedType === '위험도'" class="single-chart">
-            <canvas id="riskChart"></canvas>
-        </div>
-        <div v-else-if="selectedType === '자산유형'" class="triangle-layout">
-            <canvas id="saveInv"></canvas>
-            <canvas id="InvChart"></canvas>
-            <canvas id="saveChart"></canvas>
+        <div class="chart-wrapper">
+            <div v-if="selectedType === '위험도'" class="asset-chart">
+                <h3>위험도에 따른 포트폴리오</h3>
+                <canvas id="riskChart"></canvas>
+            </div>
+            <div v-else-if="selectedType === '자산유형' && chartIndex === 0" class="asset-chart">
+                <h3>투자/저축 비율</h3>
+                <canvas id="saveInv"></canvas>
+            </div>
+            <div v-else-if="selectedType === '자산유형' && chartIndex === 1" class="asset-chart">
+                <h3>투자 상품 구성</h3>
+                <canvas id="InvChart"></canvas>
+            </div>
+            <div v-else-if="selectedType === '자산유형' && chartIndex === 2" class="asset-chart">
+                <h3>저축 상품 구성</h3>
+                <canvas id="saveChart"></canvas>
+            </div>
         </div>
     </div>
 </template>
@@ -23,6 +33,10 @@ const props = defineProps({
         type: String,
         required: true,
         default: '위험도'
+    },
+    chartIndex: {
+        type: Number,
+        default: 0
     }
 });
 
@@ -219,43 +233,41 @@ onMounted(createCharts);
 <style scoped>
 .chart-container {
     width: 100%;
-    height: 100vh;
+    height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
     box-sizing: border-box;
-    background: linear-gradient(180deg, #111827 0%, #1f2937 100%);
 }
 
-.single-chart {
-    width: 800px;
-    height: 800px;
-    position: relative;
-    padding: 2rem;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 24px;
-    backdrop-filter: blur(10px);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-}
-
-.triangle-layout {
-    position: relative;
+.chart-wrapper {
     width: 600px;
     height: 600px;
-    display: grid;
-    grid-template-areas:
-        ". top ."
-        "left . right";
-    gap: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     padding: 2rem;
-    transform: translateX(-300px);
 }
 
-.triangle-layout canvas {
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 16px;
-    backdrop-filter: blur(10px);
-    padding: 1rem;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+.asset-chart {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.asset-chart h3 {
+    color: #fff;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+}
+
+canvas {
+    width: 100% !important;
+    height: 100% !important;
+    max-width: 500px;
+    max-height: 500px;
 }
 </style>
