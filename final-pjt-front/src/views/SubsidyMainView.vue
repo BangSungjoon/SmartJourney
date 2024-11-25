@@ -1,13 +1,14 @@
 <template>
     <section class="hero-section">
       <div class="hero-content slide-top">
-        <p class="hero-subtitle">내게 맞는 포트폴리오 추천</p>
+        <p class="hero-subtitle">놓치기 쉬운 혜택, 이제 한눈에 찾아보세요</p>
         <h1 class="hero-title">
-          고객님의 <span class="highlight">투자목표</span>를 설정하여 주세요.
+          
+          내가 몰랐던 <span class="highlight">숨겨진 혜택</span>도 놓치지 마세요.
+         
         </h1>
         <p class="hero-description">
-          고객님의 투자성향 분석을 통해<br />
-          고객님을 위한 맞춤형 글로벌 자산배분 포트폴리오를 제안해 드립니다.
+          단계별 설문으로 고객님께 꼭 필요한 <span class="highlight">보조금</span>과 <span class="highlight">지원 정보</span>를 추천합니다. 
         </p>
         <RouterLink to="/subsidy">
           <button class="hero-button">START</button>

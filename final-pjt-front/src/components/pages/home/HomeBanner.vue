@@ -1,8 +1,8 @@
 <template>
     <section class="home-banner">
       <div class="slide-in-bck-center">
-        <h1>Welcome to Our Service</h1>
-        <p>Explore the best features and services we offer.</p>
+        <h1>당신 곁의 금융 매니저, SJ</h1>
+        <p>쉽고 친근한 SmartJourney와 함께 스마트한 금융 여정을 시작해 보세요.</p>
       </div>
     </section>
   </template>
@@ -33,11 +33,14 @@
   .home-banner h1 {
     font-size: 4rem;
     color: #333;
+    font-family: 'NanumSquare', sans-serif;
+    font-weight: 800
   }
   
   .home-banner p {
     font-size: 2rem;
     color: #666;
+    font-family: 'NanumSquare', sans-serif
   }
 
   .slide-in-bck-center {

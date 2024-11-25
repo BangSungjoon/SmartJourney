@@ -5,7 +5,7 @@
       <RouterLink :to="{ name: 'home' }">
         <div class="logo">
           <img src="@/assets/images/home/logo.png" alt="사이트 로고" />
-          <span>이름 들어갈 곳</span>
+          <span>SJ</span>
         </div>
       </RouterLink>
       <!-- </a> -->

@@ -21,7 +21,8 @@
       <!-- 리스트 (초기에는 빈 공간) -->
       <div class="bank-info">
         <div v-if="selectedBank">
-          <h2 class="bank-title">{{ selectedBank }}의 상품입니다</h2>
+          <h2 class="bank-title"><span class="highlight">{{ selectedBank }}</span>의 상품입니다</h2>
+          
 
           <!-- 상품이 없을 경우 -->
           <div v-if="!depositProducts.length && !savingsProducts.length">
@@ -32,7 +33,7 @@
           <!-- 예금 상품 -->
           <div class="product-section">
             <h3>예금 상품</h3>
-            <div class="product-grid">
+            <div class="product-grid ">
               <div
                 v-for="(product, index) in depositProducts"
                 :key="index"
@@ -44,9 +45,9 @@
                   <!-- <p class="product-desc">{{ product.kor_co_nm }}</p> -->
                   <div v-for="(option, index) in product.depositoptions_set">
                     <p class="product-rate">
-                      이율: {{ option.intr_rate }}% (우대: {{ option.intr_rate2 }}%)
+                      이율: {{ option.intr_rate }}% (우대: {{ option.intr_rate2 }}%) / 기간: {{ option.save_trm }}개월
                     </p>
-                    <p class="product-term">기간: {{ option.save_trm }}개월</p>
+                    <!-- <p class="product-term">기간: {{ option.save_trm }}개월</p> -->
                   </div>
                 </div>
               </div>
@@ -68,9 +69,9 @@
                   <!-- <p class="product-desc">{{ product.kor_co_nm }}</p> -->
                   <div v-for="(option, index) in product.savingoptions_set">
                     <p class="product-rate">
-                      이율: {{ option.intr_rate }}% (우대: {{ option.intr_rate2 }}%)
+                      이율: {{ option.intr_rate }}% (우대: {{ option.intr_rate2 }}%) / 기간: {{ option.save_trm }}개월
                     </p>
-                    <p class="product-term">기간: {{ option.save_trm }}개월</p>
+                    <!-- <p class="product-term">기간: {{ option.save_trm }}개월</p> -->
                   </div>
                 </div>
               </div>
@@ -342,6 +343,15 @@ body {
   margin-bottom: 40px;
 }
 
+.product-name {
+  font-weight: bold;
+}
+
+.product-section h3 {
+  text-align: center;
+  padding-top: 20px;
+}
+
 .product-grid {
   display: flex;
   flex-direction: column;
@@ -369,10 +379,16 @@ body {
   color: white;
   border-radius: 50%;
   font-weight: bold;
+  /* text-align: center; */
 }
 
 .product-details {
   flex: 1;
+  text-align: center;
+}
+
+.highlight {
+  color: #ffd700; /* 강조 텍스트 색상 */
 }
 
   /* 애니메이션 스타일 */
@@ -390,6 +406,32 @@ body {
       opacity: 1;
     }
   }
+
+  .slide-in-blurred-top {
+	-webkit-animation: slide-in-blurred-top 1s cubic-bezier(0.230, 1.000, 0.320, 1.000) both;
+	        animation: slide-in-blurred-top 1s cubic-bezier(0.230, 1.000, 0.320, 1.000) both;
+}
+
+ @-webkit-keyframes slide-in-blurred-top {
+  0% {
+    -webkit-transform: translateY(-1000px) scaleY(2.5) scaleX(0.2);
+            transform: translateY(-1000px) scaleY(2.5) scaleX(0.2);
+    -webkit-transform-origin: 50% 0%;
+            transform-origin: 50% 0%;
+    -webkit-filter: blur(40px);
+            filter: blur(40px);
+    opacity: 0;
+  }
+  100% {
+    -webkit-transform: translateY(0) scaleY(1) scaleX(1);
+            transform: translateY(0) scaleY(1) scaleX(1);
+    -webkit-transform-origin: 50% 50%;
+            transform-origin: 50% 50%;
+    -webkit-filter: blur(0);
+            filter: blur(0);
+    opacity: 1;
+  }
+}
 
 
 </style>

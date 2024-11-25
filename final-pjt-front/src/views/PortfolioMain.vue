@@ -1,7 +1,7 @@
 <template>
     <section class="hero-section">
       <div class="hero-content slide-top">
-        <p class="hero-subtitle">내게 맞는 포트폴리오 추천</p>
+        <p class="hero-subtitle">간단한 질문으로 나에게 최적화된 금융 플랜을 설계하세요.</p>
         <h1 class="hero-title">
           고객님의 <span class="highlight">투자목표</span>를 설정하여 주세요.
         </h1>
