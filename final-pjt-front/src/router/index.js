@@ -17,6 +17,7 @@ import RecommendDetail from '@/components/RecommendDetail.vue'
 import MyPageCartView from '@/views/MyPageCartView.vue'
 import ProductDetailView from '@/views/미리작업/ProductDetailView.vue'
 import SubsidyView from '@/views/SubsidyView.vue'
+import SubsidyMainView from '@/views/SubsidyMainView.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -134,6 +135,12 @@ const router = createRouter({
       name: 'subsidy',
       component: SubsidyView,
     },
+    {
+      path: '/subsidyMain',
+      name: 'subsidyMain',
+      component: SubsidyMainView,
+    },
+
   ],
 })
 

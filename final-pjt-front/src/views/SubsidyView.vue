@@ -1,6 +1,5 @@
 <template>
   <div class="subsidy-survey">
-    <h2>맞춤형 보조금 찾기</h2>
     
     <!-- 진행 상태 표시 -->
     <div class="progress-bar">
@@ -345,94 +344,119 @@ const validateBirthYear = () => {
 </script>
 
 <style scoped>
-.subsidy-survey {
-  max-width: 600px;
-  margin: 0 auto;
+/* 컨테이너 스타일 */
+.question-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* 화면 전체 높이 */
+  text-align: center;
+  background-color: #f7c15c; /* 배경색 */
+  font-family: 'Noto Sans KR', sans-serif;
   padding: 20px;
+  box-sizing: border-box; /* 패딩 포함 크기 계산 */
 }
 
-.subsidy-survey h2 {
-  text-align: center;
+/* 질문 제목 스타일 */
+.question-title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #333;
   margin-bottom: 30px;
+}
+
+/* 라디오 옵션 스타일 */
+.radio-options-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* 옵션 간격 */
+  width: 100%;
+  max-width: 600px;
+}
+
+.radio-option {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fff;
+  padding: 10px;
+  /* border-radius: 8px; */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.radio-option:hover {
+  background-color: #f0f0f0;
+  transform: translateY(-3px);
+}
+
+.radio-circle {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #ccc;
+  border-radius: 50%;
+  margin-right: 10px;
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+.radio-circle.selected {
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+/* 진행 상태 표시 */
+.progress-container {
+  margin-top: 7rem; /* 폼과 진행률 간격 */
+  width: 80%;
+  max-width: 400px;
 }
 
 .progress-bar {
-  width: 100%;
+  background-color: #e0e0e0;
+  border-radius: 10px;
   height: 10px;
-  background-color: #eee;
-  border-radius: 5px;
-  margin-bottom: 30px;
+  position: relative;
 }
 
-.progress-bar .progress {
+.progress {
+  background-color: #007bff;
   height: 100%;
-  background-color: #4CAF50;
-  border-radius: 5px;
+  border-radius: 10px;
   transition: width 0.3s ease;
 }
 
-.question-section {
-  margin-bottom: 30px;
+/* 진행률 텍스트 */
+.progress-text {
+  margin-top: 20px;
 }
 
-.question-section h3 {
-  margin-bottom: 20px;
-}
-
-.form-group {
-  margin-bottom: 15px;
-}
-
-.form-group label {
-  display: block;
-  margin-bottom: 5px;
-}
-
-.form-group input,
-.form-group select {
-  width: 100%;
-  padding: 8px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-}
-
-.checkbox-group {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.checkbox-group label {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
+/* 이전/다음 버튼 */
 .navigation-buttons {
   display: flex;
-  justify-content: space-between;
-  margin-top: 30px;
+  gap: 10px; /* 버튼 간격 */
+  margin-top: 20px;
 }
 
 .navigation-buttons button {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 4px;
-  background-color: #4CAF50;
+  background-color: #007bff;
   color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  font-size: 1.2rem;
   cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 .navigation-buttons button:hover {
-  background-color: #45a049;
+  background-color: #0056b3;
 }
 
-.completion-message {
-  text-align: center;
-  padding: 30px;
+.navigation-buttons button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
 }
 
-.completion-message h3 {
-  margin-bottom: 15px;
-}
 </style>
