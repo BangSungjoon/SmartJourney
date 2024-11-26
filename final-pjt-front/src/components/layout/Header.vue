@@ -2,7 +2,7 @@
     <header class="site-header">
       <!-- 로고 -->
       <!-- <a href="/"> -->
-      <RouterLink :to="{ name: 'home' }">
+      <RouterLink :to="{ name: 'home' }" class="no-underline">
         <div class="logo">
           <img src="@/assets/images/home/logo.png" alt="사이트 로고" />
           <span>SJ</span>
@@ -125,5 +125,9 @@ const logOut = () => {
 
 .user-menu a:hover {
   color: #007bff; /* 호버 시 파란색으로 변경 */
+}
+
+.no-underline {
+  text-decoration: none;
 }
 </style>

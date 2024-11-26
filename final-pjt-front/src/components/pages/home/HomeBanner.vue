@@ -15,7 +15,7 @@
   
   <style scoped>
  .home-banner {
-  background-image: url('@/assets/images/home/home-banner.jpg');
+  background-image: url('@/assets/images/home/home-banner2.jpg');
   background-size: cover; /* 이미지 크기를 컨테이너에 맞춤 */
   background-position: center; /* 중앙 정렬 */
   width: 100%; /* 배너가 화면 너비를 차지 */

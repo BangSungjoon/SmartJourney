@@ -18,7 +18,7 @@
         </div>
 
         <div class="actions">
-          <button @click="applyFilters">나의 선택 확인</button>
+          <button @click="applyFilters">다시 검사 받기</button>
         </div>
       </div>
 
@@ -69,20 +69,22 @@
       </div>
     </div>
 
-    <footer class="footer">
+    <!-- <footer class="footer">
       <button class="share-button" @click="sharePortfolio">공유하기</button>
-    </footer>
+    </footer> -->
   </div>
 </template>
 
 <script setup>
+import axios from 'axios';
 import PortChart from './PortChart.vue';
 import { ref, onMounted, watch } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { useFinStore } from '@/stores/counter';
 
 const store = useFinStore();
 const route = useRoute();
+const router = useRouter()
 const resultData = ref(null);
 const selectedCriteria = ref("위험도");
 const currentSlide = ref(0);
@@ -99,7 +101,20 @@ onMounted(async () => {
 });
 
 const applyFilters = () => {
-    console.log(`선택된 기준: ${selectedCriteria.value}`);
+    // console.log(`선택된 기준: ${selectedCriteria.value}`);
+    const id = route.params.answerId
+    console.log(route.params.answerId)
+    axios({
+      method: 'delete',
+      url:`${store.API_URL}/financial_products/portfolio/${id}/`,
+      headers: {
+        'Authorization': `Token ${store.token}`
+      }
+    })
+    .then(() => {
+      router.push({ name: 'portfolio_main' })
+    })
+    .catch(err => console.log(err))
 };
 
 const sharePortfolio = () => {

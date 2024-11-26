@@ -275,6 +275,10 @@ fetchProducts()
     padding: 1.5rem;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     transition: transform 0.3s ease;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 200px;
 }
 
 .product-card:hover {
@@ -301,6 +305,7 @@ fetchProducts()
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-top: auto;
 }
 
 .detail-btn {

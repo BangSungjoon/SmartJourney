@@ -28,4 +28,5 @@ urlpatterns = [
     path('user_conditions_save/', views.user_conditions_save),
     path('matching_subsidies/', views.matching_subsidies, name='matching_subsidies'),
     path('<str:product_type>_products/<str:product_id>/like/', views.toggle_product_like, name='toggle_product_like'),
+    path('api/chatbot/', views.chatbot_response, name='chatbot_response'),
 ]

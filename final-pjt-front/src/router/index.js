@@ -18,6 +18,7 @@ import MyPageCartView from '@/views/MyPageCartView.vue'
 import ProductDetailView from '@/views/미리작업/ProductDetailView.vue'
 import SubsidyView from '@/views/SubsidyView.vue'
 import SubsidyMainView from '@/views/SubsidyMainView.vue'
+import ChatBot from '@/components/ChatBot.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -121,6 +122,11 @@ const router = createRouter({
           path: 'subsidy',
           name: 'mypage-subsidy',
           component: () => import('@/components/MySubsidy.vue')
+        },
+        {
+          path: 'chatbot',
+          name: 'mypage-chatbot',
+          component: ChatBot
         }
       ],
     },

@@ -1,9 +1,11 @@
 <template>
-    <div>
+    <div class="home-container">
       <HomeBanner />
       <HomeFeatures />
       <HomeServices />
-      <HomeExchange/>
+      <div class="row justify-content-center my-5">
+        <HomeExchange class="col-md-6 col-lg-4" />
+      </div>
     </div>
   </template>
   
@@ -24,5 +26,8 @@ import HomeExchange from '@/components/pages/home/HomeExchange.vue';
   
   <style scoped>
   /* 홈 페이지 전용 스타일 */
+  .home-container {
+    font-family: 'Noto Sans KR', sans-serif;
+  }
   </style>
   

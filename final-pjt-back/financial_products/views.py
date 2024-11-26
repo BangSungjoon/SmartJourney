@@ -13,6 +13,9 @@ from rest_framework.permissions import IsAuthenticated
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404
 from django.db.models import Q
+from openai import OpenAI
+from functools import reduce
+import operator
 
 
 
@@ -483,7 +486,7 @@ def my_portfolios(request, user_id):
     else:
         return Response({"detail": "No financial products found for these answers."}, status=404)
 
-# 해당 날짜 환률 정보를 받아오고 DB에 저장하는 작업   
+# 해당 날짜 환율 정보를 받아오고 DB에 저장하는 작업   
 @api_view(['GET'])
 def change_money(request):
     api_key = settings.AUTH_KEY
@@ -524,7 +527,7 @@ def change_money(request):
                 serializer = ChangeMoneySerializer(data=save_data)
                 if serializer.is_valid(raise_exception=True):
                     serializer.save()
-
+    print(data, 'hi')
     return Response(data)
 
 # DB에 저장된 환률 정보를 반환하는 함수
@@ -808,24 +811,47 @@ def matching_subsidies(request):
                     ~Q(service__service_nm__icontains='산림')
                 )
             else:
-                # 해당 직업 필드가 True이거나, 일반 보조금 포함
-                field_mapping = {
-                    'fisher': 'is_fisher',
-                    'farmer': 'is_farmer',
-                    'livestock': 'is_livestock',
-                    'forester': 'is_forester'
+                # 직업별 포함할 키워드 매핑
+                occupation_mapping = {
+                    'fisher': ['수산', '어업', '어선', '어가', '양식', '선원'],
+                    'farmer': ['농업', '농가', '농지', '농작물'],
+                    'livestock': ['축산', '낙농', '사육'],
+                    'forester': ['임업', '산림', '목재']
                 }
-                
-                if user_condition.occupation in field_mapping:
+
+                if user_condition.occupation in occupation_mapping:
+                    # 해당 직업 관련 보조금 OR 일반 보조금
+                    occupation_query = Q()
+                    
+                    # 직업 관련 키워드가 포함된 경우
+                    for keyword in occupation_mapping[user_condition.occupation]:
+                        occupation_query |= Q(service__service_nm__icontains=keyword)
+                    
+                    # 직업 필드가 True인 경우도 포함
+                    field_mapping = {
+                        'fisher': 'is_fisher',
+                        'farmer': 'is_farmer',
+                        'livestock': 'is_livestock',
+                        'forester': 'is_forester'
+                    }
                     field_name = field_mapping[user_condition.occupation]
-                    occupation_query = (
-                        Q(**{field_name: True}) |  # 해당 직업 보조금
-                        (Q(is_farmer__isnull=True) & 
-                         Q(is_fisher__isnull=True) & 
-                         Q(is_livestock__isnull=True) & 
-                         Q(is_forester__isnull=True))  # 일반 보조금
+                    occupation_query |= Q(**{field_name: True})
+                    
+                    # 직업 관련 필드가 모두 False이거나 Null인 일반 보조금도 포함
+                    general_query = Q(
+                        is_farmer__isnull=True,
+                        is_fisher__isnull=True,
+                        is_livestock__isnull=True,
+                        is_forester__isnull=True
+                    ) | Q(
+                        is_farmer=False,
+                        is_fisher=False,
+                        is_livestock=False,
+                        is_forester=False
                     )
-                    matching_query &= occupation_query
+                    
+                    # 최종 쿼리: (직업 관련 보조금) OR (일반 보조금)
+                    matching_query &= (occupation_query | general_query)
 
         # 기존 필터링 로직 유지
         # 성별 조건
@@ -901,17 +927,25 @@ def matching_subsidies(request):
         if user_condition.occupation in occupation_mapping:
             field_name, keywords = occupation_mapping[user_condition.occupation]
             
-            # 직업 관련 보조금 OR 일반 보조금
-            occupation_query = (
+            # 1. 직업 관련 보조금
+            occupation_specific = (
                 Q(**{field_name: True}) |  # 직업 필드가 True인 경우
-                Q(**{f"{field_name}__isnull": True})  # 직업 필드가 null인 경우 (일반 보조금)
+                reduce(operator.or_, [Q(service__service_nm__icontains=keyword) for keyword in keywords])  # 키워드 포함
             )
             
-            # 직업 관련 키워드가 포함된 경우도 포함
-            for keyword in keywords:
-                occupation_query |= Q(service__service_nm__icontains=keyword)
+            # 2. 일반 보조금 (다른 직업 필드들이 모두 False이거나 Null)
+            other_fields = ['is_fisher', 'is_farmer', 'is_livestock', 'is_forester']
+            other_fields.remove(field_name)  # 현재 직업 필드 제외
             
-            matching_query &= occupation_query
+            general_subsidies = (
+                reduce(operator.and_, [
+                    Q(**{f: False}) | Q(**{f + '__isnull': True}) 
+                    for f in other_fields
+                ])
+            )
+            
+            # 직업 관련 보조금 OR 일반 보조금
+            matching_query &= (occupation_specific | general_subsidies)
 
         # 매칭되는 보조금 조건 찾기
         matching_conditions = SupportConditions.objects.filter(matching_query)
@@ -967,5 +1001,42 @@ def get_ratio(request, answer_id):
         return Response(serializer.data)
     except FinancialProduct.DoesNotExist:
         return Response({"detail": "Portfolio not found"}, status=404)
+    
+# ChatGPT API 호출
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def chatbot_response(request):
+    client = OpenAI()
+    try:
+        # settings에서 API 키 가져오기
+        client.api_key = settings.OPENAI_API_KEY
+        print(client.api_key)
+        
+        # 요청에서 프롬프트 추출
+        prompt = request.data.get('prompt')
+        print(prompt)
+        
+        # ChatGPT API 호출
+        response = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[
+                {"role": "system", "content": "당신은 금융 전문 AI 상담사입니다."},
+                {"role": "user", "content": prompt}
+            ],
+            temperature=0.7,
+            max_tokens=1000
+        )
+        print(response.choices)
+        
+        # 응답 반환
+        return Response({
+            'message': response.choices[0].message.content
+        })
+        
+    except Exception as e:
+        print(f"Error in chatbot_response: {str(e)}")
+        return Response({
+            'error': str(e)
+        }, status=500)
     
     

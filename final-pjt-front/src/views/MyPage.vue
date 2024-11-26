@@ -10,6 +10,7 @@
               <li><RouterLink :to="{ name: 'mypage-cart' }" active-class="active">내가 찜한 예/적금 상품</RouterLink></li>
               <li><RouterLink :to="{ name: 'mypage-subsidy' }" active-class="active">맞춤 보조금 찾기</RouterLink></li>
               <li><RouterLink :to="{ name: 'mypage-portlist' }" active-class="active">포트폴리오 관리</RouterLink></li>
+              <li><RouterLink :to="{ name: 'mypage-chatbot' }" active-class="active">AI 금융 상담</RouterLink></li>
             </ul>
         </li>
         </ul>
@@ -176,7 +177,7 @@ onMounted(() => {
   color: #555;
 }
 
-.menu-section li RouterLink {
+.menu-section li a {
     text-decoration: none;
     color: #555;
     transition: color 0.3s ease;
@@ -188,7 +189,7 @@ onMounted(() => {
     font-weight: bold;
 }
 
-.menu-section li RouterLink:hover {
+.menu-section li a:hover {
     color: #007bff;
 }
 </style>

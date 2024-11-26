@@ -30,20 +30,24 @@ const korMoney = ref(0)
 const selectedExchange = ref('')  // 선택된 exchange 값 저장
 const selectCountry = ref('')
 
-onMounted(() => {
-    axios({
-        method: 'get',
-        url: `${store.API_URL}/financial_products/exchange/`
-    })
-        .then((res) => {
-            console.log(res.data)
-            exchange.value = res.data
-            // exchange 목록이 로드되면 첫 번째 항목을 기본값으로 설정
+onMounted(async () => {
+    try {
+        // 1. 먼저 최신 환율 정보를 가져와서 DB에 저장
+        await axios.get(`${store.API_URL}/financial_products/save_change_money/`)
+        
+        // 2. 그 다음 저장된 DB 데이터를 가져오기
+        const response = await axios.get(`${store.API_URL}/financial_products/exchange/`)
+        console.log('Exchange Data:', response.data)
+        
+        if (response.data && response.data.length > 0) {
+            exchange.value = response.data
             selectedExchange.value = exchange.value[exchange.value.length - 1].id
             selectCountry.value = exchange.value[exchange.value.length - 1].cur_unit
-            choice()  // 기본값에 대한 환율 계산
-        })
-        .catch(err => console.log(err))
+            choice()
+        }
+    } catch (err) {
+        console.error('Error fetching exchange data:', err)
+    }
 })
 
 const choice = function () {

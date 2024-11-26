@@ -9,7 +9,7 @@
           <!-- <a href="#">이동 링크</a> -->
         </div>
         <div class="image-grid">
-          <img src="@/assets/images/home/feature1.jpg" alt="Feature 1" />
+          <img src="@/assets/images/home/main1.jpg" alt="Feature 1" />
         </div>
       </div>
   
@@ -21,7 +21,7 @@
           <!-- <a href="#">이동 링크</a> -->
         </div>
         <div class="image-grid">
-          <img src="@/assets/images/home/feature2.jpg" alt="Feature 2" />
+          <img src="@/assets/images/home/main2.jpg" alt="Feature 2" />
         </div>
       </div>
 
@@ -46,7 +46,7 @@
           <!-- <a href="#">이동 링크</a> -->
         </div>
         <div class="image-grid">
-          <img src="@/assets/images/home/feature2.jpg" alt="Feature 2" />
+          <img src="@/assets/images/shared/hand.jpg" alt="Feature 2" />
         </div>
       </div>
 
