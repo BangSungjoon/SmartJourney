@@ -669,7 +669,7 @@ watch(
   justify-content: center;
   height: 100vh;
   text-align: center;
-  background-color: #f7c15c;
+  background-color: #E9EAEC;
   padding: 20px;
   font-family: 'Noto Sans KR', sans-serif;
 }
@@ -716,8 +716,8 @@ watch(
 }
 
 .radio-circle.selected {
-  background-color: #007bff;
-  border-color: #007bff;
+  background-color: #90ADC6;
+  border-color: #90ADC6;
 }
 
 /* Next 버튼 스타일 */
@@ -726,7 +726,7 @@ watch(
 }
 
 .next-button {
-  background-color: #007bff;
+  background-color: #90ADC6;
   color: white;
   border: none;
   border-radius: 5px;
@@ -742,7 +742,7 @@ watch(
 }
 
 .next-button:hover:not(:disabled) {
-  background-color: #0056b3;
+  background-color: #6196c4;
 }
 
 /* 진행 상태 */
@@ -760,7 +760,7 @@ watch(
 }
 
 .progress {
-  background-color: #007bff;
+  background-color: #333652;
   height: 100%;
   border-radius: 10px;
   transition: width 0.3s ease;

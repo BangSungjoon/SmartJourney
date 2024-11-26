@@ -16,21 +16,10 @@
         </ul>
 
       </aside>
-  
-      <!-- 우측 콘텐츠 -->
-      <main class="content">
-        <header class="content-header">
-          <select class="filter-dropdown">
-            <option>전체 플랫폼</option>
-          </select>
-          <input type="date" class="filter-date" />
-          <input type="date" class="filter-date" />
-          <button class="search-button">검색</button>
-        </header>
-        <div class="content-body">
+      <div class="content-body">
           <RouterView />
-        </div>
-      </main>
+      </div>
+    
     </div>
 </template>
   
@@ -81,8 +70,8 @@ onMounted(() => {
 /* 좌측 메뉴 */
 .sidebar {
   width: 30%;
-  background-color: #f8f8f8;
-  border-right: 1px solid #ddd;
+  background-color: #a9c0d4;
+  /* border-right: 1px solid #ddd; */
   padding: 4rem 0 0 18%
 }
 
@@ -129,9 +118,14 @@ onMounted(() => {
 
 /* 우측 콘텐츠 */
 .content {
-  flex: 1;
+  flex: 1; /* 좌우 영역 비율 조정 */
   padding: 20px;
+  display: flex; /* 중앙 정렬을 위해 flex 사용 */
+  flex-direction: column; /* 수직 정렬 */
+  align-items: center; /* 가로 중앙 정렬 */
+  justify-content: center; /* 세로 중앙 정렬 */
 }
+
 
 .content-header {
   display: flex;
@@ -169,10 +163,10 @@ onMounted(() => {
 }
 
 .content-body {
-  background-color: #f9f9f9;
+  background-color: white;
   padding: 20px;
-  border-radius: 5px;
-  border: 1px solid #ddd;
+  /* border-radius: 5px;  */
+  /* border: 1px solid #ddd; */
   text-align: center;
   color: #555;
 }

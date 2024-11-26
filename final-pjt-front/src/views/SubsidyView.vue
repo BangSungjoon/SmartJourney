@@ -1,10 +1,7 @@
 <template>
   <div class="subsidy-survey">
     
-    <!-- 진행 상태 표시 -->
-    <div class="progress-bar">
-      <div :style="{ width: `${(currentStep/totalSteps) * 100}%` }" class="progress"></div>
-    </div>
+    
 
     <!-- 단계별 질문 -->
     <div class="question-container" v-if="!surveyComplete">
@@ -301,17 +298,32 @@
         <button @click="nextStep" v-if="currentStep < totalSteps">다음</button>
         <button @click="submitSurvey" v-if="currentStep === totalSteps">제출</button>
       </div>
-    </div>
-
-    <!-- 완료 메시지와 결과 표시 -->
-    <div v-else>
-      <div class="completion-message">
-        <h3>설문이 완료되었습니다!</h3>
-        <p>입력하신 정보를 바탕으로 맞춤형 보조금을 찾아드렸습니다.</p>
+   <!-- 진행 상태 표시 -->
+   <div class="progress-container">
+        <div class="progress-bar">
+          <div
+            class="progress"
+            :style="{ width: (currentStep / 9) * 100 + '%' }"
+          ></div>
+        </div>
+        <p class="progress-text">{{ currentStep }} / 9</p>
       </div>
-      <MySubsidy />
+        <!-- 진행 상태 표시 -->
+      </div>
+
+      
+      
+      <!-- 완료 메시지와 결과 표시 -->
+      <div v-else>
+        <!-- <div class="completion-message"> -->
+          <!-- <h3>설문이 완료되었습니다!</h3> -->
+          <!-- <p>입력하신 정보를 바탕으로 맞춤형 보조금을 찾아드렸습니다.</p> -->
+        <!-- </div> -->
+        <MySubsidy />
+      </div>
     </div>
-  </div>
+      
+   
 </template>
 
 <script setup>
@@ -468,7 +480,7 @@ const validateBirthYear = () => {
   align-items: center;
   height: 100vh; /* 화면 전체 높이 */
   text-align: center;
-  background-color: #f7c15c; /* 배경색 */
+  background-color: #E9EAEC; /* 배경색 */
   font-family: 'Noto Sans KR', sans-serif;
   padding: 20px;
   box-sizing: border-box; /* 패딩 포함 크기 계산 */
@@ -550,8 +562,8 @@ const validateBirthYear = () => {
 
 /* 선택된 상태 스타일 */
 .radio-option input[type="radio"]:checked + label::before {
-  background-color: #007bff;
-  border-color: #007bff;
+  background-color: #90ADC6;
+  border-color: #90ADC6;
 }
 /* 체크박스 옵션 컨테이너 */
 .checkbox-options-container {
@@ -606,8 +618,8 @@ const validateBirthYear = () => {
 
 /* 체크된 상태 */
 .checkbox-option input[type="checkbox"]:checked + label::before {
-  background-color: #007bff;
-  border-color: #007bff;
+  background-color: #90ADC6;
+  border-color: #90ADC6;
 }
 
 
@@ -666,15 +678,11 @@ const validateBirthYear = () => {
 
 /* 선택된 상태 */
 .radio-option input[type="radio"]:checked + label::before {
-  background-color: #007bff;
-  border-color: #007bff;
+  background-color: #90ADC6;
+  border-color: #90ADC6;
 }
 
-
-
-
-
-/* 진행 상태 표시 */
+/* 진행 상태 */
 .progress-container {
   margin-top: 7rem; /* 폼과 진행률 간격 */
   width: 80%;
@@ -689,17 +697,18 @@ const validateBirthYear = () => {
 }
 
 .progress {
-  background-color: #007bff;
+  background-color: #333652;
   height: 100%;
   border-radius: 10px;
   transition: width 0.3s ease;
 }
 
-/* 진행률 텍스트 */
 .progress-text {
-  margin-top: 20px;
+  text-align: center;
+  margin-top: 10px;
+  font-size: 0.9rem;
+  color: #666;
 }
-
 /* 이전/다음 버튼 */
 .navigation-buttons {
   display: flex;
@@ -708,7 +717,7 @@ const validateBirthYear = () => {
 }
 
 .navigation-buttons button {
-  background-color: #007bff;
+  background-color: #90ADC6;
   color: white;
   border: none;
   border-radius: 5px;
@@ -719,12 +728,15 @@ const validateBirthYear = () => {
 }
 
 .navigation-buttons button:hover {
-  background-color: #0056b3;
+  background-color: #6196c4;
 }
 
 .navigation-buttons button:disabled {
   background-color: #ccc;
   cursor: not-allowed;
+}
+.completion-message {
+  font-family: 'Noto Sans KR', sans-serif;
 }
 
 </style>
