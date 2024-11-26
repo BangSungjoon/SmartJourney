@@ -1,8 +1,8 @@
 <template>
     <section class="home-banner">
       <div class="slide-in-bck-center">
-        <h1>당신 곁의 금융 매니저, SJ</h1>
-        <p>쉽고 친근한 SmartJourney와 함께 스마트한 금융 여정을 시작해 보세요.</p>
+        <h1>당신 곁의 <span class="highlight">금융</span> 매니저, <span class="highlight">SJ</span></h1>
+        <p>쉽고 친근한 <span class="highlight">SmartJourney</span>와 함께 스마트한 금융 여정을 시작해 보세요.</p>
       </div>
     </section>
   </template>
@@ -15,7 +15,7 @@
   
   <style scoped>
  .home-banner {
-  background-image: url('@/assets/images/home/home-banner2.jpg');
+  background-image: url('@/assets/images/home/home-banner1.jpg');
   background-size: cover; /* 이미지 크기를 컨테이너에 맞춤 */
   background-position: center; /* 중앙 정렬 */
   width: 100%; /* 배너가 화면 너비를 차지 */
@@ -26,26 +26,33 @@
   align-items: center; /*수평 중앙 정렬 */
   text-align: center;
   color: white;
-  padding-top: calc(100vh / 5); /* 화면 높이의 1/3 지점에 위치 */
+  padding-top: calc(100vh / 3); /* 화면 높이의 1/3 지점에 위치 */
   font-family: 'Noto Sans KR', sans-serif;
 }
   
   .home-banner h1 {
-    font-size: 4rem;
-    color: #333;
+    font-size: 5rem;
+    /* color: #333; */
+    /* color: #2e7dec; */
+    color: white;
     font-family: 'NanumSquare', sans-serif;
     font-weight: 800
   }
   
   .home-banner p {
-    font-size: 2rem;
-    color: #666;
+    font-size: 3rem;
+    /* color: #666; */
+    color: white;
     font-family: 'NanumSquare', sans-serif
   }
 
   .slide-in-bck-center {
 	-webkit-animation: slide-in-bck-center 1.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
 	        animation: slide-in-bck-center 1.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+}
+
+.highlight {
+  color: #ffd700;
 }
 
 /* ----------------------------------------------

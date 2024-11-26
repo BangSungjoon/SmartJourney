@@ -6,7 +6,7 @@
       검색 중...
     </div>
 
-    <div v-else-if="matchedSubsidies.length">
+    <div v-else-if="matchedSubsidies.length" class="mt-4">
       <div class="search-container">
         <input 
           type="text" 
@@ -125,6 +125,7 @@ onMounted(() => {
   max-width: 800px;
   margin: 0 auto;
   padding: 20px;
+  font-family: 'Noto Sans KR', sans-serif;
 }
 
 .loading {

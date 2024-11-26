@@ -168,13 +168,13 @@ const deletePortfolio = (portfolio) => {
 }
 
 .portfolio-item:hover {
-    background: rgba(0, 0, 0, 0.2);
+    background: rgba(75, 138, 229, 0.1);
     transform: translateY(-2px);
 }
 
 .portfolio-item.selected {
-    background: rgba(79, 70, 229, 0.2);
-    border: 1px solid rgba(79, 70, 229, 0.5);
+    background: rgba(75, 138, 229, 0.15);
+    border: 1px solid rgba(75, 138, 229, 0.5);
 }
 
 .portfolio-info {
@@ -239,12 +239,12 @@ const deletePortfolio = (portfolio) => {
 }
 
 .type-btn:hover {
-    background: rgba(79, 70, 229, 0.1);
+    background: rgba(75, 138, 229, 0.1);
 }
 
 .type-btn.active {
-    background: rgba(79, 70, 229, 0.2);
-    color: #333;
+    background: rgba(75, 138, 229, 0.2);
+    color: #4B8AE5;
     font-weight: bold;
 }
 

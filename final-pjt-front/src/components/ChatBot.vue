@@ -33,6 +33,16 @@
     chatContainer.value.scrollTop = chatContainer.value.scrollHeight
   }
   
+  const formatBotResponse = (text) => {
+    if (!text) return '';
+    
+    // 문장 단위로 분리하고 줄바꿈 추가
+    const sentences = text.split(/(?<=[.!?])\s+/);
+    return sentences
+      .filter(sentence => sentence.trim())
+      .join('\n');
+  }
+  
   const sendMessage = async () => {
     if (!userInput.value.trim()) return
   
@@ -94,7 +104,7 @@
   
       messages.value.push({
         role: 'assistant',
-        content: response.data.message
+        content: formatBotResponse(response.data.message)
       })
   
       scrollToBottom()
@@ -130,24 +140,35 @@
     flex: 1;
     overflow-y: auto;
     padding: 20px;
+    display: flex;
+    flex-direction: column;
   }
   
   .message {
     margin: 10px 0;
-    padding: 10px 15px;
+    padding: 12px 16px;
     border-radius: 15px;
     max-width: 70%;
+    word-wrap: break-word;
+    display: inline-block;
+    white-space: pre-line;
   }
   
   .user-message {
     background-color: #007bff;
     color: white;
     margin-left: auto;
+    border-top-right-radius: 5px;
+    text-align: right;
   }
   
   .bot-message {
     background-color: #f0f0f0;
     color: #333;
+    margin-right: auto;
+    border-top-left-radius: 5px;
+    text-align: left;
+    white-space: pre-line;
   }
   
   .chat-input {
@@ -176,5 +197,60 @@
   
   .chat-input button:hover {
     background-color: #0056b3;
+  }
+  
+  .message-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    margin: 5px 0;
+  }
+  
+  .message-time {
+    font-size: 0.75rem;
+    color: #888;
+    margin: 2px 5px;
+    text-align: center;
+  }
+  
+  .message {
+    animation: fadeIn 0.3s ease-in-out;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .button-group button {
+    padding: 8px 16px;
+    margin: 5px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    background-color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .button-group button.selected {
+    background-color: #1a73e8;  /* Google Blue 색상 */
+    color: white;
+    border-color: #1a73e8;
+    box-shadow: 0 2px 4px rgba(26, 115, 232, 0.2);  /* 부드러운 그림자 효과 */
+  }
+  
+  .button-group button:hover {
+    background-color: #f8f9fa;
+  }
+  
+  .button-group button.selected:hover {
+    background-color: #1557b0;  /* 더 진한 파란색 */
+    border-color: #1557b0;
   }
   </style>

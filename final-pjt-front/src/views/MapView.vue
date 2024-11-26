@@ -12,6 +12,11 @@
       <section class="store-image">
         <img src="@/assets/images/portfolio/port1.jpg" alt="Store Image" class="store-main-image" />
       </section>
+
+      <!-- 스크롤 다운 버튼 추가 -->
+      <div class="scroll-down-btn" @click="scrollToMap">
+        <span class="arrow"></span>
+      </div>
     </div>
   
     <div class="main-layout">
@@ -255,6 +260,12 @@ function setDefaultProducts() {
     },
   ];
 }
+
+// 스크롤 함수 추가
+const scrollToMap = () => {
+  const mapElement = document.querySelector('.main-layout')
+  mapElement.scrollIntoView({ behavior: 'smooth' })
+}
 </script>
 
 
@@ -269,6 +280,7 @@ body {
 
 /* 스토어 컨테이너 */
 .store-container {
+  position: relative;
   text-align: center;
   padding: 20px;
   background-color: #fff;
@@ -277,7 +289,7 @@ body {
 
 /* 상단 섹션 */
 .store-header {
-  padding: 5%;
+  padding: 3%;
 }
 
 .store-title {
@@ -433,6 +445,54 @@ body {
   }
 }
 
+/* 스크롤 다운 버튼 스타일 */
+.scroll-down-btn {
+  position: absolute;
+  bottom: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: white;
+  /* box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); */
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+.scroll-down-btn:hover {
+  transform: translateX(-50%) translateY(-5px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}
+
+.arrow {
+  border: solid #333;
+  border-width: 0 2px 2px 0;
+  display: inline-block;
+  padding: 4px;
+  transform: rotate(45deg);
+  margin-top: -5px;
+}
+
+/* 애니메이션 추가 */
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-5px);
+  }
+}
+
+.scroll-down-btn {
+  animation: bounce 2s infinite;
+}
 
 </style>
 

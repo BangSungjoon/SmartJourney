@@ -1,36 +1,38 @@
 <template>
   <div class="carousel-wrapper">
-    <!-- Carousel 컴포넌트 -->
     <Carousel :autoplay="3000" :wrap-around="true">
-      <!-- 텍스트 기반 슬라이드 1 -->
       <Slide>
-        <div class="banner">
-          <h1>나만의 맞춤 금융 플랜</h1>
-          <p>간단한 질문으로 최적의 포트폴리오를 추천받으세요!</p>
+        <div class="banner" :style="{ backgroundImage: `url(${bannerImage1})` }">
+          <div class="banner-content">
+            <h1>나만의 맞춤 금융 플랜</h1>
+            <p>간단한 질문으로 최적의 포트폴리오를 추천받으세요!</p>
+          </div>
         </div>
       </Slide>
-      <!-- 텍스트 기반 슬라이드 2 -->
       <Slide>
-        <div class="banner">
-          <h1>내 주변 은행 찾기</h1>
-          <p>가까운 은행과 예적금 상품 정보를 한눈에 확인하세요!</p>
+        <div class="banner" :style="{ backgroundImage: `url(${bannerImage2})` }">
+          <div class="banner-content">
+            <h1>내 주변 은행 찾기</h1>
+            <p>가까운 은행과 예적금 상품 정보를 한눈에 확인하세요!</p>
+          </div>
         </div>
       </Slide>
-      <!-- 텍스트 기반 슬라이드 3 -->
       <Slide>
-        <div class="banner">
-          <h1>금융 상품 비교하기</h1>
-          <p>관심 있는 상품을 모아 조건을 비교하고, 나에게 맞는 금융 상품을 선택하세요!</p>
+        <div class="banner" :style="{ backgroundImage: `url(${bannerImage3})` }">
+          <div class="banner-content">
+            <h1>금융 상품 비교하기</h1>
+            <p>관심 있는 상품을 모아 조건을 비교하고, 나에게 맞는 금융 상품을 선택하세요!</p>
+          </div>
         </div>
       </Slide>
-      <!-- 텍스트 기반 슬라이드 4 -->
       <Slide>
-        <div class="banner">
-          <h1>맞춤형 혜택 찾기</h1>
-          <p>간단한 정보 입력으로 받을 수 있는 보조금을 바로 확인하세요!</p>
+        <div class="banner" :style="{ backgroundImage: `url(${bannerImage4})` }">
+          <div class="banner-content">
+            <h1>맞춤형 혜택 찾기</h1>
+            <p>간단한 정보 입력으로 받을 수 있는 보조금을 바로 확인하세요!</p>
+          </div>
         </div>
       </Slide>
-      <!-- 페이지네이션 추가 -->
       <template #addons>
         <Pagination />
       </template>
@@ -38,23 +40,28 @@
   </div>
 </template>
 
-
-
 <script>
 import { defineComponent } from "vue";
 import { Carousel, Pagination, Slide } from "vue3-carousel";
 import "vue3-carousel/dist/carousel.css";
+import bannerImage1 from '@/assets/images/home/list1.png';
+import bannerImage2 from '@/assets/images/home/list2.png';
+import bannerImage3 from '@/assets/images/home/list3.png';
+import bannerImage4 from '@/assets/images/home/list4.png';
 
 export default defineComponent({
-  name: "TextCarousel", // 컴포넌트 이름 정의
+  name: "TextCarousel",
   components: {
-    Carousel,   // Carousel 컴포넌트 등록
-    Slide,      // Slide 컴포넌트 등록
-    Pagination, // Pagination 컴포넌트 등록
+    Carousel,
+    Slide,
+    Pagination,
   },
   data() {
     return {
-      // 하단 네비게이션 항목
+      bannerImage1,
+      bannerImage2,
+      bannerImage3,
+      bannerImage4,
       navItems: [
         "송금 마트편", 
         "내일을 준비한 커버", 
@@ -68,7 +75,6 @@ export default defineComponent({
 });
 </script>
 
-
 <style scoped>
 /* 캐러셀 컨테이너 */
 .carousel-wrapper {
@@ -79,13 +85,24 @@ export default defineComponent({
 
 /* 배너 스타일 */
 .banner {
-  width: 100%; /* 배너가 부모 너비를 모두 차지 */
-  height: 40vh; /* 배너 높이 */
-  background-color: #90ADC6; /* 배너 배경색 */
-  color: black; /* 텍스트 색상 */
-  text-align: center; /* 텍스트 중앙 정렬 */
-  padding: 50px 20px; /* 배너 여백 */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 그림자 효과 */
+  width: 100%;
+  height: 40vh;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+}
+
+/* 배너 내용을 위한 새로운 스타일 */
+.banner-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  text-align: center;
+  /* background-color: rgba(144, 173, 198, 0.7);  */
+  padding: 20px;
 }
 
 .banner h1 {
@@ -129,5 +146,3 @@ export default defineComponent({
   font-weight: bold; /* 텍스트를 두껍게 표시 */
 }
 </style>
-
-
