@@ -97,7 +97,7 @@ const fetchMatchedSubsidies = function () {
   const headers = {
     'Authorization': `Token ${token}`,
   };
-
+  console.log('matching 시작')
   axios({
     method: 'get',
     url: `${store.API_URL}/financial_products/matching_subsidies/`,
@@ -105,6 +105,7 @@ const fetchMatchedSubsidies = function () {
   })
   .then((response) => {
     matchedSubsidies.value = response.data
+    console.log(matchedSubsidies.value)
   })
   .catch((error) => {
     console.error('보조금 매칭 결과 조회 실패:', error)

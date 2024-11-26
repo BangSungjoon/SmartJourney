@@ -3,10 +3,10 @@
       <!-- 첫 번째 섹션 -->
       <div class="feature-row">
         <div class="feature-text">
-          <h3>맞춤형 금융 포트폴리오 만들기</h3>
+          <h3>간단한 질문으로 나에게 최적화된 금융 플랜을 설계하세요</h3>
           <p>고객님의 투자 성향과 현재 재무 상황을 분석하여 위험도와 자산 유형에 딱 맞는 포트폴리오 구성을 추천해 드립니다.
             쉽고 직관적인 질문 답변으로 나만의 금융 전략을 세우고 스마트한 자산 관리를 시작해 보세요!</p>
-          <a href="#">이동 링크</a>
+          <!-- <a href="#">이동 링크</a> -->
         </div>
         <div class="image-grid">
           <img src="@/assets/images/home/feature1.jpg" alt="Feature 1" />
@@ -16,9 +16,9 @@
       <!-- 두 번째 섹션 -->
       <div class="feature-row reverse">
         <div class="feature-text">
-          <h3>2. 환율 계산</h3>
-          <p>송금 전 사기 방지 알림과 은행 점검 시간을 걱정하지 않아도 되는 간편함을 경험하세요.</p>
-          <a href="#">이동 링크</a>
+          <h3>내 주변 은행, 한눈에 확인하세요</h3>
+          <p>은행을 지도에서 바로 확인하고, 원하는 은행을 선택해 예적금 상품 정보를 확인해 보세요.</p>
+          <!-- <a href="#">이동 링크</a> -->
         </div>
         <div class="image-grid">
           <img src="@/assets/images/home/feature2.jpg" alt="Feature 2" />
@@ -29,14 +29,27 @@
       <!-- 세 번째 섹션 -->
       <div class="feature-row">
         <div class="feature-text">
-          <h3>3. 예적금 상품 추천</h3>
-          <p>돈 관리와 카드 관리를 한눈에 보고, 일정까지 스마트하게 관리해 보세요.</p>
-          <a href="#">이동 링크</a>
+          <h3>금융 상품도 비교의 시대, 관심 상품을 한곳에 모아보세요</h3>
+          <p>원하는 은행의 상품 정보를 바로 확인하고, 장바구니에 담아 관심 상품을 한곳에 모아보세요.
+            조건을 비교하며 나만의 금융 목표에 가장 잘 맞는 상품을 찾을 수 있습니다.</p>
+          <!-- <a href="#">이동 링크</a> -->
         </div>
         <div class="image-grid">
           <img src="@/assets/images/home/feature1.jpg" alt="Feature 1" />
         </div>
       </div>
+
+      <div class="feature-row reverse">
+        <div class="feature-text">
+          <h3>나에게 딱 맞는 혜택을 찾아드립니다</h3>
+          <p>간단한 정보 입력으로 받을 수 있는 보조금을 손쉽게 확인하세요. 고객님의 조건에 맞는 다양한 지원 혜택과 보조금을 정리해드립니다.</p>
+          <!-- <a href="#">이동 링크</a> -->
+        </div>
+        <div class="image-grid">
+          <img src="@/assets/images/home/feature2.jpg" alt="Feature 2" />
+        </div>
+      </div>
+
     </section>
   </template>
 

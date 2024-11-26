@@ -6,6 +6,9 @@ urlpatterns = [
     path('save_deposit/', views.save_deposit, name='deposit'),  #정기 예금 저장
     path('save_deposit_savings/', views.save_deposit_savings),  #정기 예금, 적금 저장
     path('get_deposit/', views.get_depositproducts), # 정기 예금 조회(지도)
+    path('get_map_deposit/', views.get_map_depositproducts), # 예금 조회(지도)
+    path('get_map_savings/', views.get_map_savingsproducts), # 적금 조회(지도)
+
     path('recommend_deposit/', views.recommend_deposit), # 정기 예금 조회(추천)
     path('recommend_savings/', views.recommend_savings),
     path('recommend_deposit_detail/', views.recommend_deposit_detail),

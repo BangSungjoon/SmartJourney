@@ -21,12 +21,19 @@
       <!-- 리스트 (초기에는 빈 공간) -->
       <div class="bank-info">
         <div v-if="selectedBank">
-          <h2 class="bank-title">{{ selectedBank }}의 상품입니다</h2>
+          <h2 class="bank-title"><span class="highlight">{{ selectedBank }}</span>의 상품입니다</h2>
+          
 
+          <!-- 상품이 없을 경우 -->
+          <div v-if="!depositProducts.length && !savingsProducts.length">
+            <p class="no-data-message">상품을 조회할 수 없습니다.</p>
+          </div>
+          <div v-else>
+          <!-- 상품이 있는 경우 -->
           <!-- 예금 상품 -->
           <div class="product-section">
             <h3>예금 상품</h3>
-            <div class="product-grid">
+            <div class="product-grid ">
               <div
                 v-for="(product, index) in depositProducts"
                 :key="index"
@@ -35,11 +42,13 @@
                 <span class="product-badge">{{ getAlphabet(index) }}</span>
                 <div class="product-details">
                   <p class="product-name">{{ product.fin_prdt_nm }}</p>
-                  <p class="product-desc">{{ product.kor_co_nm }}</p>
-                  <p class="product-rate">
-                    이율: {{ product.intr_rate }}% (우대: {{ product.intr_rate2 }}%)
-                  </p>
-                  <p class="product-term">기간: {{ product.save_trm }}개월</p>
+                  <!-- <p class="product-desc">{{ product.kor_co_nm }}</p> -->
+                  <div v-for="(option, index) in product.depositoptions_set">
+                    <p class="product-rate">
+                      이율: {{ option.intr_rate }}% (우대: {{ option.intr_rate2 }}%) / 기간: {{ option.save_trm }}개월
+                    </p>
+                    <!-- <p class="product-term">기간: {{ option.save_trm }}개월</p> -->
+                  </div>
                 </div>
               </div>
             </div>
@@ -57,16 +66,19 @@
                 <span class="product-badge">{{ getAlphabet(index + depositProducts.length) }}</span>
                 <div class="product-details">
                   <p class="product-name">{{ product.fin_prdt_nm }}</p>
-                  <p class="product-desc">{{ product.kor_co_nm }}</p>
-                  <p class="product-rate">
-                    이율: {{ product.intr_rate }}% (우대: {{ product.intr_rate2 }}%)
-                  </p>
-                  <p class="product-term">기간: {{ product.save_trm }}개월</p>
+                  <!-- <p class="product-desc">{{ product.kor_co_nm }}</p> -->
+                  <div v-for="(option, index) in product.savingoptions_set">
+                    <p class="product-rate">
+                      이율: {{ option.intr_rate }}% (우대: {{ option.intr_rate2 }}%) / 기간: {{ option.save_trm }}개월
+                    </p>
+                    <!-- <p class="product-term">기간: {{ option.save_trm }}개월</p> -->
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
+      </div>
       </div>
     </div>
   </div>
@@ -81,23 +93,24 @@ import { useFinStore } from "@/stores/counter";
 const store = useFinStore();
 const kakaoApiKey = import.meta.env.VITE_KAKAO_API_KEY;
 
-// 상태 관리
-const selectedBank = ref(null); // 선택된 은행
+// Vue 상태 관리
+const selectedBank = ref(""); // 선택된 은행 이름
 const depositProducts = ref([]); // 예금 상품 목록
 const savingsProducts = ref([]); // 적금 상품 목록
+const bankInfos = ref([]); // 선택된 은행의 상품 정보
 
 // 알파벳 반환 함수
 function getAlphabet(index) {
   return String.fromCharCode(65 + index); // A, B, C 등 반환
 }
 
+// Kakao Maps API 초기화
 onMounted(() => {
   const kakaoScript = document.createElement("script");
   kakaoScript.type = "text/javascript";
   kakaoScript.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${kakaoApiKey}&autoload=false&libraries=services,clusterer,drawing`;
   kakaoScript.async = true;
 
-  // Kakao Maps 스크립트 로드
   kakaoScript.onload = () => {
     if (window.kakao && window.kakao.maps) {
       initializeMap();
@@ -112,6 +125,7 @@ onMounted(() => {
   document.head.appendChild(kakaoScript);
 });
 
+// 지도 초기화
 function initializeMap() {
   kakao.maps.load(() => {
     const container = document.getElementById("map");
@@ -121,14 +135,17 @@ function initializeMap() {
     };
     const map = new kakao.maps.Map(container, options);
 
+    // 초기 검색
     searchBanks(map);
 
+    // 지도 이동 시 재검색
     kakao.maps.event.addListener(map, "idle", () => {
       searchBanks(map);
     });
   });
 }
 
+// 은행 검색
 function searchBanks(map) {
   const ps = new kakao.maps.services.Places();
   const infowindow = new kakao.maps.InfoWindow({ zIndex: 1 });
@@ -146,11 +163,12 @@ function searchBanks(map) {
     },
     {
       location: map.getCenter(),
-      radius: 5000,
+      radius: 5000, // 반경 5km
     }
   );
 }
 
+// 마커 표시 및 클릭 이벤트 등록
 function displayMarker(map, place, infowindow) {
   const marker = new kakao.maps.Marker({
     map: map,
@@ -163,37 +181,59 @@ function displayMarker(map, place, infowindow) {
     );
     infowindow.open(map, marker);
 
-    // 은행 이름 저장
+    // 선택된 은행 설정
     selectedBank.value = place.place_name;
 
-    // 은행 상품 정보 요청
+    // 은행 상품 정보 가져오기
     fetchBankProducts(place.place_name);
   });
 }
 
+// 은행 상품 정보 요청
 function fetchBankProducts(bankName) {
-  axios
-    .get(`${store.API_URL}/financial_products/get_deposit/`, {
-      params: { bank: bankName },
-    })
-    .then((response) => {
-      const data = response.data;
-
-      if (!data.length) {
-        setDefaultProducts(); // 디폴트 데이터로 설정
-        return;
-      }
-
-      // 상품 분류
-      depositProducts.value = data.filter((product) => product.type === "예금");
-      savingsProducts.value = data.filter((product) => product.type === "적금");
-    })
+   // bankName 변환 로직
+   if (bankName.startsWith("KB국민은행")) {
+    bankName = "국민은행";
+  } else if (bankName.startsWith("IBK")) {
+    bankName = "중소기업은행";
+  } else if (bankName.startsWith("NH농협")) {
+    bankName = "농협은행";
+  }
+  // console.log(bankName)
+  Promise.all([
+        axios({
+            method:'get',
+            url:`${store.API_URL}/financial_products/get_map_deposit/`,
+            params: {
+                bank:bankName
+            }
+        }),
+        axios({
+            method:'get',
+            url:`${store.API_URL}/financial_products/get_map_savings/`,
+            params: {
+                bank:bankName
+            }
+        })
+    ])
+    .then(([depositResponse, savingsResponse]) => {
+        // console.log("Deposit Data:", depositResponse.data)
+        console.log("Savings Data:", savingsResponse.data)
+        depositProducts.value = [...depositResponse.data]
+        savingsProducts.value = [...savingsResponse.data]
+        // bankInfos.value = [
+        // ...depositResponse.data, // 예금 데이터
+        // ...savingsResponse.data, // 적금 데이터
+        // ];
+        // console.log(ban)
+    }) 
     .catch((error) => {
       console.error("은행 상품 정보 요청 실패:", error);
-      setDefaultProducts(); // 요청 실패 시 디폴트 데이터로 설정
+      setDefaultProducts(); // 요청 실패 시 기본값 설정
     });
 }
 
+// 기본 상품 설정
 function setDefaultProducts() {
   depositProducts.value = [
     {
@@ -216,7 +256,6 @@ function setDefaultProducts() {
   ];
 }
 </script>
-
 
 
 <style scoped>
@@ -304,6 +343,15 @@ body {
   margin-bottom: 40px;
 }
 
+.product-name {
+  font-weight: bold;
+}
+
+.product-section h3 {
+  text-align: center;
+  padding-top: 20px;
+}
+
 .product-grid {
   display: flex;
   flex-direction: column;
@@ -331,10 +379,16 @@ body {
   color: white;
   border-radius: 50%;
   font-weight: bold;
+  /* text-align: center; */
 }
 
 .product-details {
   flex: 1;
+  text-align: center;
+}
+
+.highlight {
+  color: #ffd700; /* 강조 텍스트 색상 */
 }
 
   /* 애니메이션 스타일 */
@@ -352,6 +406,32 @@ body {
       opacity: 1;
     }
   }
+
+  .slide-in-blurred-top {
+	-webkit-animation: slide-in-blurred-top 1s cubic-bezier(0.230, 1.000, 0.320, 1.000) both;
+	        animation: slide-in-blurred-top 1s cubic-bezier(0.230, 1.000, 0.320, 1.000) both;
+}
+
+ @-webkit-keyframes slide-in-blurred-top {
+  0% {
+    -webkit-transform: translateY(-1000px) scaleY(2.5) scaleX(0.2);
+            transform: translateY(-1000px) scaleY(2.5) scaleX(0.2);
+    -webkit-transform-origin: 50% 0%;
+            transform-origin: 50% 0%;
+    -webkit-filter: blur(40px);
+            filter: blur(40px);
+    opacity: 0;
+  }
+  100% {
+    -webkit-transform: translateY(0) scaleY(1) scaleX(1);
+            transform: translateY(0) scaleY(1) scaleX(1);
+    -webkit-transform-origin: 50% 50%;
+            transform-origin: 50% 50%;
+    -webkit-filter: blur(0);
+            filter: blur(0);
+    opacity: 1;
+  }
+}
 
 
 </style>

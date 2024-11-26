@@ -368,6 +368,30 @@ def get_depositproducts(request):
     else:
        return Response([], status=200)
 
+## 지도 예금
+@api_view(['get'])
+def get_map_depositproducts(request):
+    bank = request.GET['bank'].split()[0]
+    products = DepositProducts.objects.filter(kor_co_nm=bank).prefetch_related('depositoptions_set').all()
+    if products:
+        serializer = ProductOptionSerializer(products, many=True)
+        return Response(serializer.data)
+    else:
+       return Response([], status=200)
+
+## 지도 적금
+@api_view(['get'])
+def get_map_savingsproducts(request):
+    bank = request.GET['bank'].split()[0]
+    products = SavingProducts.objects.filter(kor_co_nm=bank).prefetch_related('savingoptions_set').all()
+    if products:
+        serializer = SavingProductOptionsSerializer(products, many=True)
+        return Response(serializer.data)
+    else:
+       return Response([], status=200)
+
+
+
 # 예금 추천
 @api_view(['get'])
 def recommend_deposit(request):

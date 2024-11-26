@@ -3,6 +3,7 @@
       <HomeBanner />
       <HomeFeatures />
       <HomeServices />
+      <HomeExchange/>
     </div>
   </template>
   
@@ -10,12 +11,13 @@
   import HomeBanner from '@/components/pages/home/HomeBanner.vue';
   import HomeFeatures from '@/components/pages/home/HomeFeatures.vue';
   import HomeServices from '@/components/pages/home/HomeServices.vue';
-  
+import HomeExchange from '@/components/pages/home/HomeExchange.vue';
   export default {
     components: {
       HomeBanner,
       HomeFeatures,
       HomeServices,
+      HomeExchange
     },
   };
   </script>
