@@ -2,7 +2,7 @@
     <div>
         <form @submit.prevent="createPortfolio">
             <div class="mb-3">
-                <label for="termInput" class="form-label">1. 목표를 언제까지 달성하고 싶으신가요? (단위: 년)</label>
+                <label for="termInput" class="form-label">목표를 언제까지 달성하고 싶으신가요? (단위: 년)</label>
                 <input type="number" class="form-control" id="termInput" v-model="term">
                 <div id="termHelp" class="form-text">단기 (1년 이내), 중기 (1~5년), 장기 (5년 이상), 1년 이내는 1년으로 작성해주세요.</div>
             </div>
@@ -78,6 +78,7 @@ const goalMoney = ref(null)
 const job = ref('job-fulltime')
 const family = ref('family-solo-dependent')
 
+
 const createPortfolio = function () {
     if (!term.value || !goalMoney.value) {
         alert('필수 입력 항목을 채워주세요.');
@@ -85,16 +86,12 @@ const createPortfolio = function () {
     }
     // riskPort()
     createAnswer()
-    // sendRatio()
-    // console.log(SaveInvTypeFunc())
-    // console.log(PortInvType())
-    // console.log(PortSaveType())
 }
 
 const createAnswer = function () {
     const token = store.token // 실제 사용자 토큰 값으로 대체
     const headers = {
-    'Authorization': `Token ${token}`,
+        'Authorization': `Token ${token}`,
     };
     axios({
         method: 'post',
@@ -111,11 +108,15 @@ const createAnswer = function () {
         headers: headers // 헤더 추가
     }).then((res) => {
         console.log('answer 저장 성공')
-        router.push({ name: 'home' })
+        console.log(store.currentUserId)
         const answerId = res.data.id
         sendRatio(answerId)
-    }).catch(err => console.log(err))
+    }).catch(err => {
+        console.error('답변 저장 실패:', err)
+        alert('답변 저장에 실패했습니다. 다시 시도해주세요.')
+    })
 }
+
 // 비율 저장하는 함수
 const sendRatio = function (answerId) {
     const token = store.token // 실제 사용자 토큰 값으로 대체
@@ -142,7 +143,7 @@ const sendRatio = function (answerId) {
     const inst_save_score = port_save_return.inst_save_score
 
     const headers = {
-    'Authorization': `Token ${token}`,
+        'Authorization': `Token ${token}`,
     };
 
     axios({
@@ -167,9 +168,13 @@ const sendRatio = function (answerId) {
         headers: headers // 헤더 추가
     }).then(() => {
         console.log('ratio 저장 성공')
-        router.push({ name: 'portresult' })
+        router.push({
+            name: 'portresult',
+            params: { answerId: answerId }
+        })
     }).catch(err => {
-        console.log(err)
+        console.error('비율 저장 실패:', err)
+        alert('포트폴리오 생성에 실패했습니다. 다시 시도해주세요.')
     })
 }
 

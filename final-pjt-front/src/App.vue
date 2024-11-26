@@ -1,49 +1,35 @@
 <template>
-  <header>
-    <div class="container">
-      <h1>방싕주</h1>
-
-      <nav>
-        <RouterLink :to="{ name:'home'}">메인</RouterLink> |
-        <RouterLink :to="{ name:'map' }">내 주변 은행 찾기</RouterLink> | 
-        <RouterLink :to="{ name:'portfolio' }">나만의 금융 포트폴리오</RouterLink> |
-        <template v-if="isLoggedIn">
-          <a href="#" @click.prevent="">마이페이지</a> | 
-          <a href="#" @click.prevent="logOut">로그아웃</a>
-        </template>
-        <template v-else>
-          <RouterLink :to="{ name:'SignUpView' }">회원 가입</RouterLink> | 
-          <RouterLink :to="{ name: 'login' }">로그인</RouterLink>
-        </template>
-      </nav>
-
-    </div>
-  </header>
-  <main class="container">
-    <RouterView />
-  </main>
+  <div id="app">
+    <Header />
+    <RouterView /> <!-- HomePage가 여기에 렌더링 -->
+    <!-- <Footer /> -->
+  </div>
 </template>
 
+<script>
+import Header from "@/components/layout/Header.vue";
+import Footer from "@/components/layout/Footer.vue";
 
-<script setup>
-import { RouterLink, RouterView } from 'vue-router'
-import { useFinStore } from '@/stores/counter';
-import { computed } from 'vue';
-
-const store = useFinStore()
-
-// 로그인 상태를 computed 속성으로 처리
-const isLoggedIn = computed(() => !!store.token) // !!는 상태를 true/false로 쉽게 바꿔준다.
-
-
-// 로그아웃 함수
-const logOut = () => {
-  store.token = null
-  localStorage.removeItem('token')
-}
+export default {
+  components: {
+    Header,
+    Footer,
+  },
+};
 </script>
 
+<style>
+/* 전역 스타일 */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f9f9f9;
+  color: #333;
+}
 
-<style scoped>
-
+a {
+  text-decoration: none;
+  color: inherit;
+}
 </style>

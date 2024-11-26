@@ -1,3 +1,7 @@
+# financial_products/admin.py
 from django.contrib import admin
+from .models import DepositProducts, SavingProducts
 
-# Register your models here.
+admin.site.register(DepositProducts)
+admin.site.register(SavingProducts)
+
