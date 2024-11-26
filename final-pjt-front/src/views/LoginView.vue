@@ -30,12 +30,12 @@
           </form>
   
           <!-- 회원가입 안내 -->
-          <div class="signup-redirect">
+          <!-- <div class="signup-redirect">
             <p>처음 방문하셨나요?</p>
             <button @click="goToSignup" class="redirect-button">
               회원가입
             </button>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>
@@ -66,7 +66,7 @@ const logIn = function () {
   margin: 0 auto;
   padding: 20px;
   font-family: 'Noto Sans KR', sans-serif;
-  margin-top: -300px; /* 정중앙에서 살짝 위로 이동 */
+  margin-top: -100px; /* 정중앙에서 살짝 위로 이동 */
 }
 
 /* 제목 */

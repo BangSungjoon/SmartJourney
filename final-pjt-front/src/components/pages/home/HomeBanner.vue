@@ -40,7 +40,7 @@
   }
   
   .home-banner p {
-    font-size: 3rem;
+    font-size: 2.5rem;
     /* color: #666; */
     color: white;
     font-family: 'NanumSquare', sans-serif

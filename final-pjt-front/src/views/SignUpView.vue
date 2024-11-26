@@ -47,27 +47,6 @@
 import { ref } from 'vue'
 import { useFinStore } from '@/stores/counter';
 
-// const username = ref('')
-// const password1 = ref('')
-// const password2 = ref('')
-
-// const store = useFinStore()
-
-
-// const signUp = function () {
-//     if (!username.value || !password1.value || !password2.value) {
-//         console.error("All fields are required.");
-//         return;
-//     }
-
-//     const payload = {
-//         username: username.value,
-//         password1: password1.value,
-//         password2: password2.value
-//     }
-//     console.log(payload)
-//     store.signUp(payload)
-// }
 export default {
   setup() {
     const username = ref('');
@@ -104,7 +83,7 @@ export default {
   margin: 0 auto;
   padding: 20px;
   font-family: 'Noto Sans KR', sans-serif;
-  margin-top: -300px; /* 위로 50px 이동 */
+  margin-top: -100px; /* 위로 100px 이동 */
 }
 
 /* 제목 */

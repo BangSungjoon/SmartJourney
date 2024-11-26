@@ -110,11 +110,12 @@ export default defineComponent({
   font-weight: bold; /* 큰 제목 두껍게 */
   margin-bottom: 1rem; /* 제목 아래 여백 */
   font-family: 'Noto Sans KR', sans-serif;
+  color: #007bff;
 }
 
 .banner p {
   font-size: 1.2rem; /* 부제목 크기 */
-  color: #ffffff; /* 부제목 색상 */
+  color: black; /* 부제목 색상 */
   line-height: 1.6; /* 줄 간격 */
 }
 
