@@ -1,8 +1,8 @@
 <template>
   <div>
-    <div class="store-container">
+    <div class="store-container slide-top">
       <!-- 상단 섹션 -->
-      <section class="store-header slide-top">
+      <section class="store-header ">
         <h1 class="store-title">당신과 가까이에 있는 은행을 찾아보세요</h1>
         <p class="store-subtitle">지금 가장 가까운 은행과 예금 및 적금 상품을 확인하고<br />
           나만의 금융 플랜을 세워보세요.</p>
@@ -10,7 +10,7 @@
 
       <!-- 이미지 섹션 -->
       <section class="store-image">
-        <img src="@/assets/images/portfolio/port1.jpg" alt="Store Image" class="store-main-image" />
+        <img src="@/assets/images/shared/atm2.jpg" alt="Store Image" class="store-main-image" />
       </section>
 
       <!-- 스크롤 다운 버튼 추가 -->

@@ -44,10 +44,10 @@
 import { defineComponent } from "vue";
 import { Carousel, Pagination, Slide } from "vue3-carousel";
 import "vue3-carousel/dist/carousel.css";
-import bannerImage1 from '@/assets/images/home/list1.png';
-import bannerImage2 from '@/assets/images/home/list2.png';
-import bannerImage3 from '@/assets/images/home/list3.png';
-import bannerImage4 from '@/assets/images/home/list4.png';
+import bannerImage1 from '@/assets/images/home/list11.png';
+import bannerImage2 from '@/assets/images/home/list22.png';
+import bannerImage3 from '@/assets/images/home/list33.png';
+import bannerImage4 from '@/assets/images/home/list44.png';
 
 export default defineComponent({
   name: "TextCarousel",
@@ -110,12 +110,12 @@ export default defineComponent({
   font-weight: bold; /* 큰 제목 두껍게 */
   margin-bottom: 1rem; /* 제목 아래 여백 */
   font-family: 'Noto Sans KR', sans-serif;
-  color: #007bff;
+  color: yellow;
 }
 
 .banner p {
   font-size: 1.2rem; /* 부제목 크기 */
-  color: black; /* 부제목 색상 */
+  color: white; /* 부제목 색상 */
   line-height: 1.6; /* 줄 간격 */
 }
 
