@@ -1,12 +1,11 @@
 <template>
   <section class="hero-section fade-in-fwd">
       <div class="hero-content slide-top">
-        <p class="hero-subtitle">은행 상품 찾기</p>
-        <h1 class="hero-title"> 원하는 은행의 
-          <span class="highlight">예·적금 상품</span>을 빠르게 검색하고, </h1>
-          <h1 class="hero-title"> 관심 상품을 
-          <span class="highlight">장바구니</span>에 담아 비교하세요.
-        </h1>
+        <!-- <p class="hero-subtitle">은행 상품 찾기</p> -->
+        <h1 class="hero-title">은행의 
+          <span class="highlight">예·적금 상품</span>을 <br />
+          빠르게 검색하고, 비교하세요.</h1>
+       
         <!-- 은행 선택 드롭다운 -->
      <div class="dropdown-section">
        <select id="bank-select" v-model="selectedBank" @change="fetchBankProducts" class="dropdown">
@@ -304,6 +303,7 @@ onUnmounted(() => {
     font-size: 3rem;
     font-weight: bold;
     margin-bottom: 20px;
+    line-height: 1.5;
   }
   
   .hero-title .highlight {

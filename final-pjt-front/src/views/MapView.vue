@@ -39,7 +39,7 @@
                 :key="index"
                 class="product-item"
               >
-                <span class="product-badge">{{ getAlphabet(index) }}</span>
+                <!-- <span class="product-badge">{{ getAlphabet(index) }}</span> -->
                 <div class="product-details">
                   <p class="product-name">{{ product.fin_prdt_nm }}</p>
                   <!-- <p class="product-desc">{{ product.kor_co_nm }}</p> -->
@@ -63,7 +63,7 @@
                 :key="index"
                 class="product-item"
               >
-                <span class="product-badge">{{ getAlphabet(index + depositProducts.length) }}</span>
+                <!-- <span class="product-badge">{{ getAlphabet(index + depositProducts.length) }}</span> -->
                 <div class="product-details">
                   <p class="product-name">{{ product.fin_prdt_nm }}</p>
                   <!-- <p class="product-desc">{{ product.kor_co_nm }}</p> -->

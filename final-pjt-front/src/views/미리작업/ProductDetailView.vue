@@ -106,7 +106,7 @@ const getDetail = function(id) {
     Promise.all([
         axios({
             method:'get',
-            url:`${store.API_URL}/financial_products/recommend_deposit_datail/`,
+            url:`${store.API_URL}/financial_products/recommend_deposit_detail/`,
             params: {
                 fincode:id
             }

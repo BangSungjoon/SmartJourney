@@ -58,11 +58,11 @@ const createCharts = () => {
                             props.portfolio.high_ratio
                         ],
                         backgroundColor: [
-                            '#4CAF50',
-                            '#FFD700',
-                            '#FF6347',
-                            '#FF4500',
-                            '#FF0000'
+                            '#C2C0A6',
+                            '#A8B545',
+                            '#6A8C69',
+                            '#53736A',
+                            '#024554',
                         ],
                         hoverOffset: 4
                     }]
@@ -104,7 +104,7 @@ const createCharts = () => {
                         datasets: [{
                             label: '투자 저축 비율',
                             data: [props.portfolio.saving_ratio*100, props.portfolio.inv_ratio*100],
-                            backgroundColor: ['#4CAF50', '#FF0000'],
+                            backgroundColor: ['#F3B562', '#8CBEB2'],
                             hoverOffset: 4
                         }]
                     },
@@ -148,7 +148,11 @@ const createCharts = () => {
                                 props.portfolio.bond_ratio*100, 
                                 props.portfolio.alt_invest_ratio*100
                             ],
-                            backgroundColor: ['#4CAF50', '#FFD700', '#FF4500', '#FF0000'],
+                            backgroundColor: [
+                            '#F06060',
+                            '#F3B562',
+                            '#5C4B51',
+                            '#8CBEB2',],
                             hoverOffset: 4
                         }]
                     },
@@ -190,7 +194,7 @@ const createCharts = () => {
                                 props.portfolio.inst_save_ratio*100, 
                                 props.portfolio.reg_save_ratio*100
                             ],
-                            backgroundColor: ['#4CAF50', '#FF0000'],
+                            backgroundColor: ['#5C4B51', '#F06060'],
                             hoverOffset: 4
                         }]
                     },
@@ -259,7 +263,7 @@ onMounted(createCharts);
 }
 
 .asset-chart h3 {
-    color: #fff;
+    color: #000000;
     margin-bottom: 1rem;
     font-size: 1.5rem;
 }

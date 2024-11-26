@@ -135,8 +135,8 @@ const prevSlide = () => {
   align-items: center;
   width: 100%;
   height: 100vh;
-  background-color: #000;
-  color: #fff;
+  background-color: #E9EAEC;
+  color: #000000;
   box-sizing: border-box;
 }
 
@@ -156,9 +156,9 @@ const prevSlide = () => {
   flex-direction: column;
   justify-content: center;
   padding: 100px;
-  background-color: #000;
+  background-color: #E9EAEC;
   border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); */
 }
 
 .portfolio-header h1 {
@@ -187,10 +187,10 @@ const prevSlide = () => {
 /* 드롭다운 */
 .filter-dropdown {
   appearance: none;
-  background-color: #000;
-  color: #fff;
+  background-color: #E9EAEC;
+  color: #000000;
   border: none;
-  border-bottom: 2px solid #fff;
+  border-bottom: 2px solid #000000;
   padding: 5px 10px;
   font-size: 2rem; /* 선택된 항목 글씨 크기 */
   cursor: pointer;
@@ -200,8 +200,8 @@ const prevSlide = () => {
 /* 드롭다운 옵션 */
 .filter-dropdown option {
   font-size: 1rem; /* 드롭다운 내부 옵션 글씨 크기 */
-  background-color: #000; /* 옵션 배경색 (일관성 유지) */
-  color: #fff; /* 옵션 글씨 색 */
+  background-color: #E9EAEC; /* 옵션 배경색 (일관성 유지) */
+  color: #000000; /* 옵션 글씨 색 */
 }
 
 .filter-dropdown:hover {
@@ -211,7 +211,7 @@ const prevSlide = () => {
 /* 설명 텍스트 */
 .filter-description {
   font-size: 2rem;
-  color: #aaa;
+  color: #000000;
   margin-left: 10px;
 }
 
@@ -279,7 +279,7 @@ const prevSlide = () => {
   display: flex;
   justify-content: center;
   align-items: center;
-  color: #fff;
+  color: #000000;
   font-size: 1.2rem;
   font-weight: bold;
 }
@@ -299,7 +299,7 @@ const prevSlide = () => {
   display: flex;
   justify-content: center;
   align-items: center;
-  color: #fff;
+  color: #000000;
   font-size: 1rem;
   font-weight: bold;
   position: absolute;
@@ -379,7 +379,7 @@ const prevSlide = () => {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(0, 0, 0, 0.3);
   border: none;
   border-radius: 50%;
   width: 40px;
@@ -388,7 +388,7 @@ const prevSlide = () => {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  color: white;
+  color: rgb(255, 255, 255);
   font-size: 20px;
   z-index: 1;
 }

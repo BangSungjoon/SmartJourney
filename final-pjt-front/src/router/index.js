@@ -9,7 +9,7 @@ import PortResults from '@/components/pages/questions/PortResults.vue'
 import MapView from '@/views/MapView.vue'
 import Recommend from '@/views/Recommend.vue'
 import MyPage from '@/views/MyPage.vue'
-import RecommendDetail from '@/components/RecommendDetail.vue'
+// import RecommendDetail from '@/components/RecommendDetail.vue'
 // import SaveRecommendView from '@/views/SaveRecommendView.vue'
 import PortfolioListView from '@/views/미리작업/PortfolioListView.vue'
 // import CurrencyExchangeView from '@/views/미리작업/CurrencyExchangeView.vue'
@@ -79,12 +79,12 @@ const router = createRouter({
       component: Recommend
 
     },
-    {
-      path: '/recommend/:id',
-      name: 'RecommendDetail',
-      component: RecommendDetail
+    // {
+    //   path: '/recommend/:id',
+    //   name: 'RecommendDetail',
+    //   component: RecommendDetail
 
-    },
+    // },
     // {
     //   path: '/saveRecommend',
     //   name: 'saveRecommend',

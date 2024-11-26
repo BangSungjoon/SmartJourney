@@ -4,7 +4,7 @@
       <div class="feature-row">
         <div class="feature-text">
           <h3>간단한 질문으로 나에게 최적화된 금융 플랜을 설계하세요</h3>
-          <p>고객님의 투자 성향과 현재 재무 상황을 분석하여 위험도와 자산 유형에 딱 맞는 포트폴리오 구성을 추천해 드립니다.
+          <p>고객님의 투자 성향과 현재 재무 상황을 분석하여 위험도와 자산 유형에 딱 맞는 포트폴리오 구성을 추천해 드립니다. <br />
             쉽고 직관적인 질문 답변으로 나만의 금융 전략을 세우고 스마트한 자산 관리를 시작해 보세요!</p>
           <!-- <a href="#">이동 링크</a> -->
         </div>
@@ -30,7 +30,7 @@
       <div class="feature-row">
         <div class="feature-text">
           <h3>금융 상품도 비교의 시대, 관심 상품을 한곳에 모아보세요</h3>
-          <p>원하는 은행의 상품 정보를 바로 확인하고, 장바구니에 담아 관심 상품을 한곳에 모아보세요.
+          <p>원하는 은행의 상품 정보를 바로 확인하고, 장바구니에 담아 관심 상품을 한곳에 모아보세요. <br />
             조건을 비교하며 나만의 금융 목표에 가장 잘 맞는 상품을 찾을 수 있습니다.</p>
           <!-- <a href="#">이동 링크</a> -->
         </div>
@@ -42,7 +42,8 @@
       <div class="feature-row reverse">
         <div class="feature-text">
           <h3>나에게 딱 맞는 혜택을 찾아드립니다</h3>
-          <p>간단한 정보 입력으로 받을 수 있는 보조금을 손쉽게 확인하세요. 고객님의 조건에 맞는 다양한 지원 혜택과 보조금을 정리해드립니다.</p>
+          <p>간단한 정보 입력으로 받을 수 있는 보조금을 손쉽게 확인하세요. <br />
+            고객님의 조건에 맞는 다양한 지원 혜택과 보조금을 정리해드립니다.</p>
           <!-- <a href="#">이동 링크</a> -->
         </div>
         <div class="image-grid">
@@ -123,15 +124,16 @@ onBeforeUnmount(() => {
   }
   
   .feature-text h3 {
-    font-size: 2rem;
+    font-size: 2.2rem;
     color: #333;
     margin-bottom: 20px;
   }
   
   .feature-text p {
-    font-size: 1.5rem;
+    font-size: 1rem;
     color: #666;
     line-height: 1.6;
+    padding-top: 30px;
   }
   
   .image-grid {

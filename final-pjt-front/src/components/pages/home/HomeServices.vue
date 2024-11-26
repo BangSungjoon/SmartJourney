@@ -81,7 +81,7 @@ export default defineComponent({
 .banner {
   width: 100%; /* 배너가 부모 너비를 모두 차지 */
   height: 40vh; /* 배너 높이 */
-  background-color: white; /* 배너 배경색 */
+  background-color: #90ADC6; /* 배너 배경색 */
   color: black; /* 텍스트 색상 */
   text-align: center; /* 텍스트 중앙 정렬 */
   padding: 50px 20px; /* 배너 여백 */
@@ -92,11 +92,12 @@ export default defineComponent({
   font-size: 2.5rem; /* 큰 제목 크기 */
   font-weight: bold; /* 큰 제목 두껍게 */
   margin-bottom: 1rem; /* 제목 아래 여백 */
+  font-family: 'Noto Sans KR', sans-serif;
 }
 
 .banner p {
   font-size: 1.2rem; /* 부제목 크기 */
-  color: #bbb; /* 부제목 색상 */
+  color: #ffffff; /* 부제목 색상 */
   line-height: 1.6; /* 줄 간격 */
 }
 
